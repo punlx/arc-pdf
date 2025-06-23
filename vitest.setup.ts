@@ -1,2 +1,2 @@
-// frontend2\vitest.setup.ts
+// arc-pdf\vitest.setup.ts
 import '@testing-library/jest-dom';
