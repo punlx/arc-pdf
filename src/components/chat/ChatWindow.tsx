@@ -16,7 +16,7 @@ export const ChatWindow = () => {
   return (
     <div
       className={`flex flex-col gap-3 pb-12 transition-all duration-700 ${
-        messages.length ? ' min-h-[calc(100vh-260px)]' : ' min-h-[247px]'
+        messages.length ? ' min-h-[calc(100vh-247px)]' : ' min-h-[247px]'
       }`}
     >
       {messages.length ? (

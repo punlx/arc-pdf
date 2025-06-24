@@ -72,7 +72,7 @@ export const ChatPage = () => {
   }, [paramId, setChatId, setMessages, addSession, navigate, resetChat]);
 
   return (
-    <div className="h-[calc(100vh-60px)] py-8 flex justify-center">
+    <div className="h-full py-8 flex justify-center">
       <div className="transition-all max-sm:w-[370px] max-md:w-[600px] max-lg:w-[500px] max-xl:w-[600px] max-2xl:w-[700px] 2xl:w-[900px]">
         <ChatWindow />
         <InputBar />
