@@ -1,29 +1,13 @@
 // src/components/upload/FileList.tsx
 import { useFilesStore } from '@/stores/filesStore';
-import { FileText, Trash } from 'lucide-react'; // 🆕 เพิ่ม Trash
+import { FileText } from 'lucide-react'; // 🆕 เพิ่ม Trash
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { deleteFile } from '@/api/files';
-import { toast } from 'sonner';
-import { useChatStore } from '@/stores/chatStore';
 
 export const FileList = () => {
-  const chatId = useChatStore((s) => s.chatId);
   const files = useFilesStore((s) => s.files);
-  const deleteById = useFilesStore((s) => s.deleteById);
 
   if (!files.length)
     return <p className="text-muted-foreground text-sm mt-4">ยังไม่มีไฟล์ที่อัปโหลด</p>;
-
-  async function handleRemove(id: string) {
-    try {
-      if (!chatId) throw new Error('No chat');
-      await deleteFile(chatId, id);
-      deleteById(id);
-      toast.success('ไฟล์ถูกลบ');
-    } catch (err: any) {
-      toast.error(err.message ?? 'ลบไฟล์ไม่สำเร็จ');
-    }
-  }
 
   return (
     <ScrollArea className="h-52">
