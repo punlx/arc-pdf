@@ -83,13 +83,13 @@ export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
           <div className="flex flex-col gap-6">
             <SidebarHeader className="items-center justify-between pt-4">
               <img src={LogoImg} width={128} alt="Logo" className="ml-3" />
-              <SidebarTrigger className='cursor-pointer' />
+              <SidebarTrigger className="cursor-pointer" />
             </SidebarHeader>
             <SidebarContent className="flex-none px-4">
               <Button
                 onClick={handleNewChat}
                 variant="ghost"
-                className="w-full border-2 border-white flex gap-1 justify-center items-center rounded-full py-2 cursor-pointer"
+                className="w-full border border-white flex gap-1 justify-center items-center rounded-full py-2 cursor-pointer"
                 type="button"
               >
                 <Plus />
@@ -101,7 +101,7 @@ export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
               <div className="opacity-60">Chats</div>
               <Separator />
               {sessions.length === 0 && (
-                <p className="text-muted-foreground flex items-center gap-3">
+                <p className="flex items-center gap-3 opacity-60">
                   <File />
                   <span>No sessions yet</span>
                 </p>
@@ -130,13 +130,9 @@ export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
                             <DropdownMenuTrigger>
                               <Ellipsis />
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem className="flex justify-evenly">
-                                <Forward />
-                                <span>Share</span>
-                              </DropdownMenuItem>
+                            <DropdownMenuContent className="min-w-0">
                               <DropdownMenuItem
-                                className="flex justify-evenly"
+                                className="flex justify-between"
                                 onClick={() => handleDelete(s.chat_id)}
                               >
                                 <Trash />

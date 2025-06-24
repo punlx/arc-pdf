@@ -172,7 +172,7 @@ export const InputBar = () => {
         <div className="flex justify-between gap-3">
           <UploadPanel></UploadPanel>
 
-          <Button type="submit" variant={'outline'} disabled={sending || !text.trim() || !hasFiles}>
+          <Button className='cursor-pointer' type="submit" variant={'outline'} disabled={sending || !text.trim() || !hasFiles}>
             {sending ? (
               <Loader2 className="animate-spin h-4 w-4" />
             ) : (

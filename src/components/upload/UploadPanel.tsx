@@ -1,35 +1,18 @@
+// src\components\upload\UploadPanel.tsx
+
 import { DropZone } from './DropZone';
 import { FileList } from './FileList';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useFilesStore } from '@/stores/filesStore';
-import { useChatStore } from '@/stores/chatStore';
-import { deleteAllFiles } from '@/api/files';
-import { toast } from 'sonner';
 import { cn } from '@/lib/utils'; // 🆕 tiny util for merging classes
 
 export const UploadPanel = () => {
   const files = useFilesStore((s) => s.files);
-  const clear = useFilesStore((s) => s.clear);
-  const chatId = useChatStore((s) => s.chatId);
 
   /* ---------- helper ---------- */
   const visibleFiles = files.slice(0, 3); // โชว์ได้สูงสุด 3 ชิ้น
   const hiddenCount = Math.max(files.length - 3, 0); // ที่เหลือ
-
-  async function handleDeleteAll() {
-    if (!files.length || !chatId) return;
-    if (!window.confirm('ลบไฟล์ทั้งหมด?')) return;
-
-    try {
-      await deleteAllFiles(chatId);
-      clear();
-      toast.success('ลบไฟล์ทั้งหมดแล้ว');
-    } catch (err: any) {
-      toast.error(err?.message ?? 'ลบไฟล์ไม่สำเร็จ');
-    }
-  }
 
   return (
     <>
@@ -65,17 +48,11 @@ export const UploadPanel = () => {
             </Badge>
           </PopoverTrigger>
 
-          <PopoverContent side="top" align="start" className="w-72 flex flex-col gap-4">
+          <PopoverContent side="top" align="start" className="w-90 flex flex-col gap-4">
             <header className="flex justify-between items-center">
               <span className="font-medium text-sm">All files</span>
-
-              {files.length > 0 && (
-                <Button size="sm" variant="destructive" onClick={handleDeleteAll}>
-                  Delete all
-                </Button>
-              )}
             </header>
-            <FileList /> {/* ใช้คอมโพเนนต์เก่าได้เลย */}
+            <FileList />
           </PopoverContent>
         </Popover>
       )}
