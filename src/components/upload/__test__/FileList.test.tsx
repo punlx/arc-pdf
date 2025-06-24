@@ -1,7 +1,6 @@
 // src/components/upload/__test__/FileList.test.tsx
 
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import { FileList } from '../UploadPanel/FileList';
 
 import { useChatStore, type ChatState } from '@/stores/chatStore'; // 🆕 Import State type
