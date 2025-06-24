@@ -14,10 +14,10 @@ export const ThemeToggle = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="rounded-full p-2 hover:bg-muted transition" aria-label="Toggle theme">
+        <div className="rounded-full p-2 hover:bg-muted transition" aria-label="Toggle theme">
           <Sun className="h-5 w-5 block dark:hidden" />
           <Moon className="h-5 w-5 hidden dark:block" />
-        </button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme('light')}>

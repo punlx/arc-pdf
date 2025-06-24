@@ -1,76 +1,72 @@
-import { useState, useEffect, type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Menu, MessageCircle } from 'lucide-react';
-import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Settings, MessageSquare, Glasses } from 'lucide-react';
+
 import { MemoryBadge } from '@/components/memory/MemoryBadge';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 
-import { UploadPanel } from '@/components/upload/UploadPanel';
-import { SessionsSidebar } from '@/components/sessions/SessionsSidebar';
+import { useSidebar } from '../ui/sidebar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ThemeSelect } from '@/components/theme/ThemeSelect'; // 🆕 ใช้ Select ใหม่
 
 import { useChatStore } from '@/stores/chatStore';
 import { useFilesStore } from '@/stores/filesStore';
 import { useConfigStore } from '@/stores/configStore';
-import { useSessionsStore } from '@/stores/sessionsStore'; // 🆕
+import { useSessionsStore } from '@/stores/sessionsStore';
 
 import { client } from '@/api/client';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { fullReset } from '@/lib/fullReset';
-import { useSidebar } from '../ui/sidebar';
-import { useLocation } from 'react-router-dom';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 export const Header = () => {
-  const { open } = useSidebar();
-  const location = useLocation();
-  /* ──────────── Zustand selectors ──────────── */
-  const { chatId } = useChatStore();
+  /* ───── libs & hooks ───── */
+  const { open, openMobile, isMobile } = useSidebar();
+  const isCollapsed = isMobile ? !openMobile : !open;
 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isMobileScreen = useIsMobile();
+
+  /* ───── global states ───── */
+  const { chatId } = useChatStore();
   const clearFiles = useFilesStore((s) => s.clear);
   const setFiles = useFilesStore((s) => s.setFiles);
 
   const useStream = useConfigStore((s) => s.useStream);
   const setUseStream = useConfigStore((s) => s.setUseStream);
 
-  const removeSession = useSessionsStore((s) => s.removeSession); // 🆕
-  const clearSessions = useSessionsStore((s) => s.clear); // 🆕
+  const removeSession = useSessionsStore((s) => s.removeSession);
+  const clearSessions = useSessionsStore((s) => s.clear);
 
-  const navigate = useNavigate();
-
-  /* ──────────── Drawer state ──────────── */
-  const [leftOpen, setLeftOpen] = useState(false);
-  const [rightOpen, setRightOpen] = useState(false);
-
-  /* ปิด Drawer เมื่อ viewport ≥ 1024px (lg) */
+  /* ───── auto-close side drawers ≥ lg ───── */
+  const [dummy, setDummy] = useState(false); // placeholder — ไม่มีผล แต่คง structure เดิม
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)');
-    const close = () => {
-      setLeftOpen(false);
-      setRightOpen(false);
-    };
+    const close = () => setDummy(false);
     mq.addEventListener('change', close);
     return () => mq.removeEventListener('change', close);
   }, []);
 
-  /* ──────────── Reset handler ──────────── */
+  /* ───── reset handler ───── */
   async function handleReset() {
     if (!window.confirm('ล้างแชตและไฟล์ทั้งหมด ?')) return;
 
     try {
-      // 1) เรียก backend
       await fullReset(chatId);
 
-      // 3) เคลียร์ หรือรีเฟรชไฟล์ฝั่งซ้าย
-      if (chatId) {
-        clearFiles(); // ไฟล์ของ session นี้
-        removeSession(chatId); // ลบจาก sidebar
-      } else {
-        clearFiles();
-        clearSessions(); // ฟูลรีเซ็ต
-      }
+      chatId ? (clearFiles(), removeSession(chatId)) : (clearFiles(), clearSessions());
 
-      // 4) เช็กว่ายังมีไฟล์เหลือไหมใน server (กรณี full-reset false positive)
       if (!chatId) {
         const res = await client.get('/api/files', { params: { chat_id: '' } }).catch(() => null);
         if (res?.data?.total_files) {
@@ -79,27 +75,37 @@ export const Header = () => {
         }
       }
 
-      // 5) นำทางกลับ root
       navigate('/');
-
       toast.success('รีเซ็ตเรียบร้อย');
     } catch (e: any) {
       toast.error(e?.message ?? 'Reset failed');
     }
   }
 
+  /* ───── render ───── */
   return (
-    <>
-      <div
-        className={`${
-          open ? 'pl-4' : ' pl-14'
-        } pr-4 h-[60px] items-center flex transition-all justify-between w-full border-b-2 sticky top-0 bg-background z-20`}
-      >
-        <div className="text-xl font-medium">ArcPDF</div>
+    <header
+      className={`${
+        !isCollapsed ? 'pl-4' : 'pl-14'
+      } pr-4 h-[60px] flex items-center justify-between w-full border-b-2 sticky top-0 bg-background z-20 transition-all`}
+    >
+      <div className="text-xl font-medium">ArcPDF</div>
 
-        <div className="flex items-center gap-4">
-          {location.pathname !== '/' && (
-            <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4">
+        {location.pathname === '/' ? (
+          <div>
+            <ThemeToggle></ThemeToggle>
+          </div>
+        ) : (
+          <>
+            <MemoryBadge />
+
+            <Button variant="outline" onClick={handleReset}>
+              Reset
+            </Button>
+
+            {/* inline stream toggle เมื่อ ≥ md */}
+            {!isMobileScreen && (
               <div className="flex items-center gap-1 text-xs">
                 <span>REST</span>
                 <Switch
@@ -108,19 +114,74 @@ export const Header = () => {
                   aria-label="toggle streaming"
                 />
                 <span>WS</span>
+                <ThemeToggle></ThemeToggle>
               </div>
+            )}
 
-              <MemoryBadge />
+            {/* Settings drawer ดึงลงจากด้านบน */}
+            {isMobileScreen && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    aria-label="settings"
+                    className="rounded-full"
+                  >
+                    <Settings className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
 
-              <Button variant="outline" onClick={handleReset}>
-                Reset
-              </Button>
-            </div>
-          )}
+                <SheetContent
+                  side="top"
+                  className="w-full max-w-none rounded-b-2xl border-b-2 shadow-lg bg-background"
+                >
+                  {/* header */}
+                  <SheetHeader className="flex flex-row items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Settings />
+                      <SheetTitle>Settings</SheetTitle>
+                    </div>
+                    <SheetClose asChild></SheetClose>
+                  </SheetHeader>
 
-          <ThemeToggle />
-        </div>
+                  {/* body */}
+                  <div className="flex flex-col gap-2 px-5 pb-4">
+                    {/* Chat row */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <MessageSquare className="h-4 w-4" />
+                        <span>Streaming</span>
+                      </div>
+
+                      <div className="flex items-center gap-1 text-xs">
+                        <span>REST</span>
+                        <Switch
+                          checked={useStream}
+                          onCheckedChange={setUseStream}
+                          aria-label="toggle streaming"
+                        />
+                        <span>WS</span>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Theme row –– เปลี่ยนเป็น Select */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Glasses className="h-4 w-4" />
+                        <span className="text-sm">Theme</span>
+                      </div>
+                      <ThemeSelect /> {/* 🆕 */}
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
+          </>
+        )}
       </div>
-    </>
+    </header>
   );
 };
