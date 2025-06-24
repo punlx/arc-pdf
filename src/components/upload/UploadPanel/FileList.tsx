@@ -1,15 +1,15 @@
 // src/components/upload/FileList.tsx
 import { useFilesStore } from '@/stores/filesStore';
-import { FileText } from 'lucide-react'; // 🆕
+import { FileText, Trash } from 'lucide-react'; // 🆕 เพิ่ม Trash
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { deleteFile } from '@/api/files'; // 🆕
-import { toast } from 'sonner'; // 🆕
+import { deleteFile } from '@/api/files';
+import { toast } from 'sonner';
 import { useChatStore } from '@/stores/chatStore';
 
 export const FileList = () => {
   const chatId = useChatStore((s) => s.chatId);
   const files = useFilesStore((s) => s.files);
-  const deleteById = useFilesStore((s) => s.deleteById); // 🆕
+  const deleteById = useFilesStore((s) => s.deleteById);
 
   if (!files.length)
     return <p className="text-muted-foreground text-sm mt-4">ยังไม่มีไฟล์ที่อัปโหลด</p>;
@@ -35,13 +35,13 @@ export const FileList = () => {
             <span className="text-xs text-muted-foreground mr-2 shrink-0">
               {(f.size / 1024).toFixed(1)} KB
             </span>
-
-            {/* ปุ่มลบรายไฟล์ */}
             <button
               onClick={() => handleRemove(f.id)}
-              aria-label="delete file"
+              aria-label={`delete file ${f.filename}`} // 🆕 ทำให้ label ไม่ซ้ำกัน
               className="hover:text-destructive transition shrink-0"
-            ></button>
+            >
+              <Trash className="h-4 w-4" /> {/* 🆕 เพิ่มไอคอน */}
+            </button>
           </li>
         ))}
       </ul>

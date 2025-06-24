@@ -14,20 +14,17 @@ export const InputBar = () => {
   const messages = useChatStore((s) => s.messages);
   const hasFiles = useFilesStore((s) => s.files.length > 0);
 
-  // ใช้ hook ที่จัดการ Logic การส่งทั้งหมด
   const { isSubmitting, submitChat } = useChatSubmit();
 
-  // handleSubmit ฟังก์ชันจะเรียบง่ายและสะอาดขึ้นมาก
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const q = text.trim();
     if (!q || isSubmitting) return;
 
-    setText(''); // เคลียร์ input ทันที
+    setText('');
     await submitChat(q);
   }
 
-  /* ──────────── UI ──────────── */
   return (
     <form
       onSubmit={handleSubmit}
@@ -41,7 +38,7 @@ export const InputBar = () => {
           onChange={(e) => setText(e.target.value)}
           placeholder="Ask anything..."
           className="border-none focus-visible:shadow-none"
-          disabled={isSubmitting} // ใช้ isSubmitting จาก hook
+          disabled={isSubmitting}
         />
         <div className="flex justify-between gap-3">
           <UploadPanel></UploadPanel>
@@ -53,9 +50,11 @@ export const InputBar = () => {
             disabled={isSubmitting || !text.trim() || !hasFiles}
           >
             {isSubmitting ? (
-              <Loader2 className="animate-spin h-4 w-4" />
+              // 🆕 เพิ่ม data-testid
+              <Loader2 className="animate-spin h-4 w-4" data-testid="loader-icon" />
             ) : (
-              <SendHorizonal className="h-4 w-4" />
+              // 🆕 เพิ่ม data-testid
+              <SendHorizonal className="h-4 w-4" data-testid="send-icon" />
             )}
           </Button>
         </div>

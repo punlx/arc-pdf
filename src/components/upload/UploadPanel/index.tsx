@@ -11,7 +11,7 @@ import {
   SheetClose,
 } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/useMobile';
 import { useFilesStore } from '@/stores/filesStore';
 import { cn } from '@/lib/utils';
 import { FileList } from './FileList';

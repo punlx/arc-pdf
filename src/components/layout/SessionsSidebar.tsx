@@ -61,7 +61,7 @@ const SessionListItem = ({
   const labelText = session.first_question?.trim();
   const messageCount = session.message_count;
   return (
-    <SidebarMenuItem>
+    <SidebarMenuItem data-testid={`session-item-${session.chat_id}`}>
       <SidebarMenuButton asChild className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 flex-1 min-w-0" onClick={onSelect}>
@@ -69,8 +69,15 @@ const SessionListItem = ({
             <Badge variant="default">{messageCount}</Badge>
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Ellipsis />
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                aria-label={`Actions for ${labelText}`}
+              >
+                <Ellipsis />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-0">
               <DropdownMenuItem className="flex justify-between" onClick={onDelete}>

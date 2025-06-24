@@ -1,4 +1,4 @@
-// src\components\MessageBubble.tsx
+// src/components/chat/MessageBubble.tsx
 
 import clsx from 'clsx';
 import { Clipboard } from 'lucide-react';
@@ -10,6 +10,8 @@ export const MessageBubble = ({ m }: { m: Message }) => {
 
   return (
     <div
+      // 🆕 เพิ่ม data-testid
+      data-testid="message-bubble"
       className={clsx(
         'max-w-[75%] rounded-md p-3 text-sm',
         isUser ? 'ml-auto bg-primary text-primary-foreground' : 'mr-auto bg-muted'
@@ -20,7 +22,10 @@ export const MessageBubble = ({ m }: { m: Message }) => {
       </p>
 
       {m.source && !isUser && !isTyping && (
-        <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+        <div
+          data-testid="message-source"
+          className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"
+        >
           <Clipboard className="h-3 w-3" /> {m.source}
         </div>
       )}

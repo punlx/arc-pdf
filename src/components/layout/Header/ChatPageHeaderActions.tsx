@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { MemoryBadge } from '@/components/memory/MemoryBadge';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/useMobile';
 import { useChatStore } from '@/stores/chatStore';
 import { fullReset } from '@/lib/fullReset';
 import { StreamModeToggle } from './StreamModeToggle';
