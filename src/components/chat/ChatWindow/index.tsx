@@ -4,7 +4,7 @@ import { useRef, useEffect } from 'react';
 import { useChatStore } from '@/stores/chatStore';
 import { MessageBubble } from './MessageBubble';
 
-export const FirstChatText = `What do you want to know about?`;
+export const FirstChatText = `Let's explore PDF`;
 
 export const ChatWindow = () => {
   const messages = useChatStore((s) => s.messages);
@@ -17,7 +17,7 @@ export const ChatWindow = () => {
 
   return (
     <div
-      className={`flex flex-col gap-3 pb-12 transition-all duration-700 ${
+      className={`flex flex-col gap-6 pb-12 transition-all duration-700 ${
         messages.length ? ' min-h-[calc(100vh-247px)]' : ' min-h-[247px]'
       }`}
     >

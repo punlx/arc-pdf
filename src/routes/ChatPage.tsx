@@ -16,9 +16,11 @@ export const ChatPage = () => {
   useChatHistory(chatId);
 
   return (
-    <div className="h-full py-8 flex justify-center">
-      <div className="transition-all max-sm:w-[370px] max-md:w-[600px] max-lg:w-[500px] max-xl:w-[600px] max-2xl:w-[700px] 2xl:w-[900px]">
-        <ChatWindow />
+    <div className="h-full pt-8 flex justify-center">
+      <div className="transition-all max-sm:w-full max-md:w-[600px] max-lg:w-[600px] max-xl:w-[700px] max-2xl:w-[800px] 2xl:w-[900px]">
+        <div className="max-sm:px-8">
+          <ChatWindow />
+        </div>
         <InputBar />
       </div>
     </div>

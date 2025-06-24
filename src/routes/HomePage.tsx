@@ -22,7 +22,7 @@ export const HomePage = () => {
 
   return (
     <div className="flex items-center justify-center h-full flex-col gap-4">
-      <div className="px-8 py-4 border-2 border-foreground rounded-full max-sm:text-sm max-md:text-lg text-2xl font-medium font-mono whitespace-pre relative top-[50px] z-10">
+      <div className="px-8 py-4 border-2 border-foreground rounded-full max-sm:text-[16px] max-md:text-lg text-2xl font-medium font-mono whitespace-pre relative top-[50px] z-10">
         {displayedText}
       </div>
       <div

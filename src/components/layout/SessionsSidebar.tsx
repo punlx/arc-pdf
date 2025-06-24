@@ -65,7 +65,7 @@ const SessionListItem = ({
       <SidebarMenuButton asChild className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 flex-1 min-w-0" onClick={onSelect}>
-            <span className="flex-1 min-w-0 truncate">{labelText}</span>
+            <span className="flex-1 min-w-0 truncate text-[16px]">{labelText}</span>
             <Badge variant="default">{messageCount}</Badge>
           </div>
           <DropdownMenu>

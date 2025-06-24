@@ -28,16 +28,16 @@ export const InputBar = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className={`flex items-center gap-2 sticky bottom-8 z-50 bg-background transition-all ${
+      className={`flex items-center gap-2 sticky max-sm:bottom-0 bottom-8 z-50 bg-background transition-all ${
         messages.length ? '0' : '0'
       }`}
     >
-      <div className="w-full p-4 border-2 rounded-4xl flex flex-col gap-4 ">
+      <div className="w-full p-4 border-2 sm:rounded-4xl max-sm:rounded-t-4xl flex flex-col gap-4">
         <Input
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Ask anything..."
-          className="border-none focus-visible:shadow-none"
+          className="border-none focus-visible:shadow-none text-[16px]"
           disabled={isSubmitting}
         />
         <div className="flex justify-between gap-3">

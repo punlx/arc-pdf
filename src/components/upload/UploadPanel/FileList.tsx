@@ -35,13 +35,6 @@ export const FileList = () => {
             <span className="text-xs text-muted-foreground mr-2 shrink-0">
               {(f.size / 1024).toFixed(1)} KB
             </span>
-            <button
-              onClick={() => handleRemove(f.id)}
-              aria-label={`delete file ${f.filename}`} // 🆕 ทำให้ label ไม่ซ้ำกัน
-              className="hover:text-destructive transition shrink-0"
-            >
-              <Trash className="h-4 w-4" /> {/* 🆕 เพิ่มไอคอน */}
-            </button>
           </li>
         ))}
       </ul>
