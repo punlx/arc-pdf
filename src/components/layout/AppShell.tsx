@@ -1,3 +1,5 @@
+// src\components\layout\AppShell.tsx
+
 import { type ReactNode } from 'react';
 
 import { SessionsSidebar } from '@/components/sessions/SessionsSidebar';

@@ -1,3 +1,5 @@
+// src\components\chat\InputBar.tsx
+
 import { type FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SendHorizonal, Loader2, FileUp } from 'lucide-react';

@@ -1,3 +1,4 @@
+// src\components\layout\Header.tsx
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Settings, MessageSquare, Glasses } from 'lucide-react';

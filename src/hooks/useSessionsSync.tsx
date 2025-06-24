@@ -1,3 +1,5 @@
+// src\hooks\useSessionsSync.tsx
+
 import { useEffect } from 'react';
 
 import { client } from '@/api/client';
