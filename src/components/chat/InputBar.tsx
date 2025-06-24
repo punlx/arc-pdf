@@ -16,11 +16,11 @@ import { sendChatWS, genTempId } from '@/api/wsChat';
 import { client } from '@/api/client';
 import { usePdfUploader } from '@/hooks/usePdfUploader';
 import { useDropzone } from 'react-dropzone';
-import { FileList } from '../upload/FileList';
 import { UploadPanel } from '../upload/UploadPanel';
 
 export const InputBar = () => {
   const [text, setText] = useState('');
+  const messages = useChatStore((s) => s.messages);
 
   /* ──────────── stores ──────────── */
   const { chatId, setChatId, addMessage, updateMessage, sending, setSending, setMemory } =
@@ -157,7 +157,9 @@ export const InputBar = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center gap-2 sticky bottom-8 z-50 bg-background"
+      className={`flex items-center gap-2 sticky bottom-8 z-50 bg-background transition-all ${
+        messages.length ? '0' : '0'
+      }`}
     >
       <div className="w-full bg-background p-4 border-2 rounded-4xl flex flex-col gap-4">
         <Input
