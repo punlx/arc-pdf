@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { fetchFiles } from '@/api/files';
 import { useFilesStore } from '@/stores/filesStore';
 import { useChatStore } from '@/stores/chatStore';
+import { client } from '@/api/client';
 
 /** sync files for current chatId */
 export function useFilesSync(chatId: string | null) {
@@ -19,10 +20,10 @@ export function useFilesSync(chatId: string | null) {
       try {
         const [filesRes, statusRes] = await Promise.all([
           fetchFiles(chatId),
-          fetch('http://localhost:8000/api/status').then((r) => r.json()),
+          client.get('/api/status'),
         ]);
         setFiles(filesRes.data.files);
-        setMemory(statusRes.has_memory);
+        setMemory(statusRes.data.has_memory);
       } catch {
         /* silent */
       }
