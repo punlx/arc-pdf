@@ -39,7 +39,7 @@ export const UploadPanel = () => {
 
         {/* 2️⃣ แท็กไฟล์แนวนอน (scroll ได้บน mobile) */}
         <div className="flex items-center gap-2 w-full">
-          <div className="w-full flex gap-2">
+          <div className="w-full flex gap-2 pr-[37px]">
             {visibleFiles.map((f) => (
               <div
                 key={f.id}

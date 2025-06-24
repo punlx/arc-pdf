@@ -167,7 +167,7 @@ export const InputBar = () => {
           className="border-none focus-visible:shadow-none"
           disabled={sending}
         />
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-3">
           <UploadPanel></UploadPanel>
 
           <Button type="submit" variant={'outline'} disabled={sending || !text.trim() || !hasFiles}>

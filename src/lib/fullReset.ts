@@ -1,4 +1,4 @@
-// fullReset: call backend reset + เคลียร์ state ฝั่ง FE ให้เหมือนปุ่ม Reset
+// src\lib\fullReset.ts
 import { resetSession } from '@/api/reset';
 import { client } from '@/api/client';
 import { useChatStore } from '@/stores/chatStore';

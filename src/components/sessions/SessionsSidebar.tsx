@@ -1,32 +1,16 @@
-import {
-  Plus,
-  MessageCircle,
-  Trash2,
-  PanelsLeftBottom,
-  Ellipsis,
-  Divide,
-  Forward,
-  Trash,
-  MessageCircleX,
-  File,
-} from 'lucide-react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+// src\components\sessions\SessionsSidebar.tsx
+
+import { Plus, Ellipsis, Forward, Trash, File } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { fullReset } from '@/lib/fullReset';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { client } from '@/api/client';
 import { useSessionsStore } from '@/stores/sessionsStore';
 import { useChatStore } from '@/stores/chatStore';
-import { cn } from '@/lib/utils';
-import { Tooltip } from '@/components/ui/tooltip';
 
-// v2
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
@@ -36,9 +20,6 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -48,6 +29,7 @@ import {
 } from '@/components/ui/sidebar';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { useFilesStore } from '@/stores/filesStore';
 
 const SidebarOpenTrigger = () => {
   const { open } = useSidebar();
@@ -55,7 +37,7 @@ const SidebarOpenTrigger = () => {
   return (
     !open && (
       <div className="fixed top-2 left-2 z-50">
-        <SidebarTrigger />
+        <SidebarTrigger className="cursor-pointer" />
       </div>
     )
   );
@@ -71,7 +53,6 @@ const formatDate = (iso?: string) => {
 };
 
 export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
-  const { chatId: current } = useParams<{ chatId?: string }>();
   const navigate = useNavigate();
 
   const sessions = useSessionsStore((s) => s.sessions);
@@ -82,10 +63,9 @@ export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
 
   /* ---------- New chat ---------- */
   async function handleNewChat() {
-    // const { data } = await client.post('/api/chat/create');
-    // resetChat();
-    // navigate(`/${data.chat_id}`);
-    navigate(`/`);
+    resetChat(); // รีเซ็ตข้อความ
+    useFilesStore.getState().clear(); // ล้างรายชื่อไฟล์
+    navigate('/');
   }
 
   /* ---------- Delete session ---------- */
@@ -95,68 +75,15 @@ export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
     navigate('/');
   }
 
-  // v2
-  /* ---------- Render ---------- */
-
   return (
     <>
-      {/* <div className="w-70 border-l h-[calc(100vh-56px)] p-4 flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-medium flex items-center gap-2">
-            <MessageCircle className="h-4 w-4" /> Sessions
-          </h2>
-          <Button size="icon" variant="ghost" onClick={handleNewChat} aria-label="new chat">
-            <Plus className="h-5 w-5" />
-          </Button>
-        </div>
-
-        <ScrollArea className="flex-1 pr-2">
-          <ul className="space-y-1">
-            {sessions.map((s) => {
-              const dateStr = formatDate(s.last_message_time);
-              const shortId = `${s.chat_id.slice(0, 7)}…`;
-              const labelText = s.first_question?.trim() || `Chat: ${shortId}`;
-
-              return (
-                <li key={s.chat_id} className="group flex items-center justify-between">
-                  <Tooltip label={s.first_question || 'No message yet'} side="right">
-                    <Link
-                      to={`/${s.chat_id}`}
-                      onClick={() => bringToFront(s.chat_id)}
-                      className={cn(
-                        'block flex-1 truncate px-3 py-2 rounded-md text-sm hover:bg-muted transition',
-                        current === s.chat_id && 'bg-muted font-semibold'
-                      )}
-                    >
-                      {labelText} {dateStr && `(${dateStr})`} ({s.message_count})
-                    </Link>
-                  </Tooltip>
-
-                  <button
-                    onClick={() => handleDelete(s.chat_id)}
-                    aria-label="delete session"
-                    className="opacity-50 group-hover:opacity-100 transition mr-1 text-muted-foreground hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </li>
-              );
-            })}
-
-            {sessions.length === 0 && (
-              <p className="text-muted-foreground text-sm mt-2">No sessions yet</p>
-            )}
-          </ul>
-        </ScrollArea>
-      </div> */}
-
       <SidebarProvider>
         <SidebarOpenTrigger></SidebarOpenTrigger>
         <Sidebar collapsible="offcanvas">
           <div className="flex flex-col gap-6">
             <SidebarHeader className="items-center justify-between pt-4">
               <img src={LogoImg} width={128} alt="Logo" className="ml-3" />
-              <SidebarTrigger />
+              <SidebarTrigger className='cursor-pointer' />
             </SidebarHeader>
             <SidebarContent className="flex-none px-4">
               <Button

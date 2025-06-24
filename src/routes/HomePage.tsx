@@ -1,13 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import UploadPDF from '@/assets/upload_pdf.png';
-import { Loader2, UploadCloud } from 'lucide-react';
-import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
+// src\routes\HomePage.tsx
 
-import { uploadFiles } from '@/api/upload';
-import { client } from '@/api/client';
-import { useFilesStore } from '@/stores/filesStore';
-import { useChatStore } from '@/stores/chatStore';
+import { useEffect, useState } from 'react';
+import UploadPDF from '@/assets/upload_pdf.png';
+import { Loader2 } from 'lucide-react';
 import { usePdfUploader } from '@/hooks/usePdfUploader';
 import { useDropzone } from 'react-dropzone';
 
