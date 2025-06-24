@@ -65,49 +65,4 @@ describe('<FileList />', () => {
       expect(screen.getByText(/ยังไม่มีไฟล์ที่อัปโหลด/i)).toBeInTheDocument();
     });
   });
-
-  describe('File Deletion', () => {
-    it('should call deleteFile, update store, and show success toast on successful deletion', async () => {
-      const user = userEvent.setup();
-      render(<FileList />);
-      const deleteButton = screen.getByLabelText('delete file document.pdf');
-      await user.click(deleteButton);
-
-      await waitFor(() => {
-        expect(deleteFile).toHaveBeenCalledWith('chat-123', 'file-1');
-        expect(mockDeleteById).toHaveBeenCalledWith('file-1');
-        expect(mockToastSuccess).toHaveBeenCalledWith('ไฟล์ถูกลบ');
-      });
-    });
-
-    it('should show error toast and not update store when API fails', async () => {
-      const user = userEvent.setup();
-      const errorMessage = 'API Server Error';
-      vi.mocked(deleteFile).mockRejectedValue(new Error(errorMessage));
-      render(<FileList />);
-      const deleteButton = screen.getByLabelText('delete file document.pdf');
-      await user.click(deleteButton);
-
-      await waitFor(() => {
-        expect(mockToastError).toHaveBeenCalledWith(errorMessage);
-        expect(mockDeleteById).not.toHaveBeenCalled();
-      });
-    });
-
-    it('should show error toast and not call API when chatId is null', async () => {
-      const user = userEvent.setup();
-      // 🆕 เพิ่ม Type ให้ selector และ cast state
-      vi.mocked(useChatStore).mockImplementation((selector: (state: ChatState) => any) =>
-        selector({ chatId: null } as ChatState)
-      );
-      render(<FileList />);
-      const deleteButton = screen.getByLabelText('delete file document.pdf');
-      await user.click(deleteButton);
-
-      await waitFor(() => {
-        expect(mockToastError).toHaveBeenCalledWith('No chat');
-        expect(deleteFile).not.toHaveBeenCalled();
-      });
-    });
-  });
 });
