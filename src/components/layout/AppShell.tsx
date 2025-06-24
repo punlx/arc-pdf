@@ -1,7 +1,7 @@
 // src/components/layout/AppShell.tsx
 
 import { type ReactNode } from 'react';
-import { SessionsSidebar } from '@/components/sessions/SessionsSidebar';
+import { SessionsSidebar } from '@/components/layout/SessionsSidebar';
 import { Toaster } from 'sonner';
 import { Header } from './็Header';
 import { useSessionsSync } from '@/hooks/useSessionsSync'; // 🆕 Import hook

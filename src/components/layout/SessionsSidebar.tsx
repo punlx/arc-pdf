@@ -21,7 +21,7 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
-  SidebarMenu, // 🆕 นำ SidebarMenu กลับเข้ามาใน import
+  SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
@@ -103,7 +103,6 @@ const SessionList = ({
     );
   }
 
-  // 🔄 แก้ไข: เปลี่ยนจาก <div> มาใช้ <SidebarMenu> เป็นตัวหุ้มรายการทั้งหมด
   return (
     <SidebarMenu>
       {sessions.map((s) => (
@@ -142,6 +141,7 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
   const handleNewChat = () => {
     resetChat();
     clearFiles();
+    document.title = 'ArcPDF'; // 🆕 รีเซ็ตชื่อแท็บ
     navigate('/');
     if (isMobile && typeof setOpenMobile === 'function') {
       setOpenMobile(false);
@@ -150,6 +150,15 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
 
   const handleSelectSession = (chatId: string) => {
     bringToFront(chatId);
+
+    // 🆕 ค้นหา session ที่เลือกเพื่อเอา first_question
+    const selectedSession = sessions.find((s) => s.chat_id === chatId);
+    if (selectedSession?.first_question) {
+      document.title = `ArcPDF - ${selectedSession.first_question}`;
+    } else {
+      document.title = 'ArcPDF'; // ชื่อสำรอง
+    }
+
     navigate(`/${chatId}`);
     if (isMobile && typeof setOpenMobile === 'function') {
       setOpenMobile(false);
@@ -159,6 +168,7 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
   const handleDeleteSession = (chatId: string) => {
     if (window.confirm('ลบแชตนี้ทั้งหมด ?')) {
       fullReset(chatId, navigate);
+      document.title = 'ArcPDF'; // 🆕 รีเซ็ตชื่อแท็บ
     }
   };
 
@@ -177,7 +187,7 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
           <SidebarContent className="pl-4">
             <ScrollArea className="h-full w-full pr-4">
               <div className="opacity-60 mb-3">Chats</div>
-              <Separator className='mb-4' />
+              <Separator className="mb-4" />
               <SessionList
                 sessions={sessions}
                 onSelectSession={handleSelectSession}
