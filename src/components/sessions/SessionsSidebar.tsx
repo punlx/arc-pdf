@@ -177,7 +177,7 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
           <SidebarContent className="pl-4">
             <ScrollArea className="h-full w-full pr-4">
               <div className="opacity-60 mb-3">Chats</div>
-              <Separator />
+              <Separator className='mb-4' />
               <SessionList
                 sessions={sessions}
                 onSelectSession={handleSelectSession}

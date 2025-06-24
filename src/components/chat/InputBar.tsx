@@ -35,7 +35,7 @@ export const InputBar = () => {
         messages.length ? '0' : '0'
       }`}
     >
-      <div className="w-full bg-background p-4 border-2 rounded-4xl flex flex-col gap-4">
+      <div className="w-full p-4 border-2 rounded-4xl flex flex-col gap-4 ">
         <Input
           value={text}
           onChange={(e) => setText(e.target.value)}
