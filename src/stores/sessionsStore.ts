@@ -10,7 +10,7 @@ export interface SessionMeta {
   last_message_time?: string;
 }
 
-interface SessionsState {
+export interface SessionsState {
   sessions: SessionMeta[];
 
   setSessions: (ss: SessionMeta[]) => void;

@@ -10,7 +10,7 @@ export interface UploadFileMeta {
   upload_time: string;
 }
 
-interface FilesState {
+export interface FilesState {
   files: UploadFileMeta[];
   setFiles: (fs: UploadFileMeta[]) => void;
   addMany: (fs: UploadFileMeta[]) => void;

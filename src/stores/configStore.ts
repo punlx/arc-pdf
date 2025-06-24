@@ -1,7 +1,7 @@
 // src/stores/configStore.ts
 import { create } from 'zustand';
 
-interface ConfigState {
+export interface ConfigState {
   useStream: boolean;
   setUseStream: (v: boolean) => void;
 }

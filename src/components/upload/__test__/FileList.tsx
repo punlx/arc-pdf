@@ -4,8 +4,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FileList } from '../UploadPanel/FileList';
 
-import { useChatStore } from '@/stores/chatStore';
-import { useFilesStore, type UploadFileMeta } from '@/stores/filesStore';
+import { useChatStore, type ChatState } from '@/stores/chatStore'; // 🆕 Import State type
+import { useFilesStore, type UploadFileMeta, type FilesState } from '@/stores/filesStore'; // 🆕 Import State type
 import { deleteFile } from '@/api/files';
 import { toast } from 'sonner';
 
@@ -23,13 +23,12 @@ const mockFiles: UploadFileMeta[] = [
   { id: 'file-2', filename: 'report.pdf', size: 20480, upload_time: '' },
 ];
 
-const mockFileStoreState = {
+const mockFileStoreState: Partial<FilesState> = {
   files: mockFiles,
   deleteById: mockDeleteById,
 };
 
-// 🆕 สร้าง state จำลองสำหรับ Chat Store
-const mockChatStoreState = {
+const mockChatStoreState: Partial<ChatState> = {
   chatId: 'chat-123',
 };
 
@@ -37,17 +36,19 @@ describe('<FileList />', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // ตั้งค่า Mock สำหรับ Store ทั้งสองด้วย mockImplementation
-    vi.mocked(useFilesStore).mockImplementation((selector) => selector(mockFileStoreState));
-    // 🔄 แก้ไข mock ของ useChatStore ให้ใช้ mockImplementation
-    vi.mocked(useChatStore).mockImplementation((selector) => selector(mockChatStoreState));
+    // 🆕 เพิ่ม Type ให้ selector และ cast state
+    vi.mocked(useFilesStore).mockImplementation((selector: (state: FilesState) => any) =>
+      selector(mockFileStoreState as FilesState)
+    );
+    vi.mocked(useChatStore).mockImplementation((selector: (state: ChatState) => any) =>
+      selector(mockChatStoreState as ChatState)
+    );
 
     vi.mocked(deleteFile).mockResolvedValue(undefined);
     vi.mocked(toast, true).success = mockToastSuccess;
     vi.mocked(toast, true).error = mockToastError;
   });
 
-  // ส่วนของ Rendering (เหมือนเดิมและผ่านแล้ว)
   describe('Rendering', () => {
     it('should render a list of files when files exist', () => {
       render(<FileList />);
@@ -56,8 +57,9 @@ describe('<FileList />', () => {
     });
 
     it('should render "no files" message when the file list is empty', () => {
-      vi.mocked(useFilesStore).mockImplementation((selector) =>
-        selector({ files: [], deleteById: mockDeleteById })
+      // 🆕 เพิ่ม Type ให้ selector และ cast state
+      vi.mocked(useFilesStore).mockImplementation((selector: (state: FilesState) => any) =>
+        selector({ files: [], deleteById: mockDeleteById } as unknown as FilesState)
       );
       render(<FileList />);
       expect(screen.getByText(/ยังไม่มีไฟล์ที่อัปโหลด/i)).toBeInTheDocument();
@@ -68,12 +70,10 @@ describe('<FileList />', () => {
     it('should call deleteFile, update store, and show success toast on successful deletion', async () => {
       const user = userEvent.setup();
       render(<FileList />);
-
       const deleteButton = screen.getByLabelText('delete file document.pdf');
       await user.click(deleteButton);
 
       await waitFor(() => {
-        // ตอนนี้ component จะได้รับ 'chat-123' เป็น string ที่ถูกต้อง
         expect(deleteFile).toHaveBeenCalledWith('chat-123', 'file-1');
         expect(mockDeleteById).toHaveBeenCalledWith('file-1');
         expect(mockToastSuccess).toHaveBeenCalledWith('ไฟล์ถูกลบ');
@@ -84,9 +84,7 @@ describe('<FileList />', () => {
       const user = userEvent.setup();
       const errorMessage = 'API Server Error';
       vi.mocked(deleteFile).mockRejectedValue(new Error(errorMessage));
-
       render(<FileList />);
-
       const deleteButton = screen.getByLabelText('delete file document.pdf');
       await user.click(deleteButton);
 
@@ -98,16 +96,15 @@ describe('<FileList />', () => {
 
     it('should show error toast and not call API when chatId is null', async () => {
       const user = userEvent.setup();
-      // 🔄 Override mock ของ useChatStore สำหรับ test case นี้โดยเฉพาะ
-      vi.mocked(useChatStore).mockImplementation((selector) => selector({ chatId: null }));
-
+      // 🆕 เพิ่ม Type ให้ selector และ cast state
+      vi.mocked(useChatStore).mockImplementation((selector: (state: ChatState) => any) =>
+        selector({ chatId: null } as ChatState)
+      );
       render(<FileList />);
-
       const deleteButton = screen.getByLabelText('delete file document.pdf');
       await user.click(deleteButton);
 
       await waitFor(() => {
-        // ตอนนี้ component จะได้รับ null จริงๆ และ toast.error จะถูกเรียก
         expect(mockToastError).toHaveBeenCalledWith('No chat');
         expect(deleteFile).not.toHaveBeenCalled();
       });

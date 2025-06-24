@@ -11,7 +11,7 @@ export interface Message {
 
 type Patch = Partial<Message> | ((prev: Message) => Partial<Message>);
 
-interface ChatState {
+export interface ChatState {
   chatId: string | null;
   messages: Message[];
   hasMemory: boolean;

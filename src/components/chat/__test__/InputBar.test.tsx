@@ -3,12 +3,13 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { InputBar } from '../InputBar';
-import { MemoryRouter } from 'react-router-dom'; // 🆕 Import MemoryRouter
+import { MemoryRouter } from 'react-router-dom';
+import type { UserEvent } from '@testing-library/user-event'; // 🆕 Import UserEvent type
 
 // --- 1. Mock Dependencies ---
 import { useChatSubmit } from '@/hooks/useChatSubmit';
-import { useFilesStore } from '@/stores/filesStore';
-import { useChatStore } from '@/stores/chatStore';
+import { useFilesStore, type FilesState } from '@/stores/filesStore'; // 🆕 Import State type
+import { useChatStore, type ChatState } from '@/stores/chatStore'; // 🆕 Import State type
 
 vi.mock('@/hooks/useChatSubmit');
 vi.mock('@/stores/filesStore');
@@ -20,17 +21,18 @@ vi.mock('../upload/UploadPanel', () => ({
 // --- 2. สร้าง Mock Functions และ State ---
 const mockSubmitChat = vi.fn();
 
-const mockFileStoreState = {
+const mockFileStoreState: Partial<FilesState> = {
   files: [{ id: 'file-1', filename: 'test.pdf', size: 123, upload_time: '' }],
 };
-const mockChatStoreState = {
+
+const mockChatStoreState: Partial<ChatState> = {
   messages: [],
   chatId: 'test-chat-id',
   setChatId: vi.fn(),
 };
 
 describe('<InputBar />', () => {
-  let user;
+  let user: UserEvent; // 🆕 กำหนด Type ให้ user
 
   // --- 3. ตั้งค่า Mock เริ่มต้น ---
   beforeEach(() => {
@@ -42,19 +44,24 @@ describe('<InputBar />', () => {
       submitChat: mockSubmitChat,
     });
 
-    vi.mocked(useFilesStore).mockImplementation((selector) => {
-      return selector ? selector(mockFileStoreState) : mockFileStoreState;
+    // 🆕 เพิ่ม Type ให้กับ 'selector' และจัดการ state
+    vi.mocked(useFilesStore).mockImplementation((selector?: (state: FilesState) => any) => {
+      return selector
+        ? selector(mockFileStoreState as FilesState)
+        : (mockFileStoreState as FilesState);
     });
 
-    vi.mocked(useChatStore).mockImplementation((selector) => {
-      return selector ? selector(mockChatStoreState) : mockChatStoreState;
+    // 🆕 เพิ่ม Type ให้กับ 'selector' และจัดการ state
+    vi.mocked(useChatStore).mockImplementation((selector?: (state: ChatState) => any) => {
+      return selector
+        ? selector(mockChatStoreState as ChatState)
+        : (mockChatStoreState as ChatState);
     });
   });
 
   // --- 4. Test Cases (เพิ่ม <MemoryRouter> ในทุก render) ---
 
   it('should allow user to type in the input', async () => {
-    // 🔄 ห่อด้วย MemoryRouter
     render(
       <MemoryRouter>
         <InputBar />
@@ -77,9 +84,14 @@ describe('<InputBar />', () => {
     });
 
     it('should be disabled if there is text but no files', async () => {
-      vi.mocked(useFilesStore).mockImplementation((selector) =>
-        selector ? selector({ files: [] }) : { files: [] }
-      );
+      // Override mock: ไม่มีไฟล์
+      vi.mocked(useFilesStore).mockImplementation((selector?: (state: FilesState) => any) => {
+        const emptyState = { files: [] };
+        return selector
+          ? selector(emptyState as unknown as FilesState)
+          : (emptyState as unknown as FilesState);
+      });
+
       render(
         <MemoryRouter>
           <InputBar />
