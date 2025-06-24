@@ -1,34 +1,16 @@
-// src\routes\HomePage.tsx
+// src/routes/HomePage.tsx
 
-import { useEffect, useState } from 'react';
 import UploadPDF from '@/assets/upload_pdf.png';
 import { Loader2 } from 'lucide-react';
 import { usePdfUploader } from '@/hooks/usePdfUploader';
 import { useDropzone } from 'react-dropzone';
+import { useTypingEffect } from '@/hooks/useTypingEffect'; // 🆕 Import hook
 
-const text = 'Let’s Upload your PDF...'; // ✨ แก้ typo จาก Uplaod → Upload
+const UPLOAD_TEXT = 'Let’s Upload your PDF...';
 
 export const HomePage = () => {
-  const [displayedText, setDisplayedText] = useState('');
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const typeInterval = setInterval(() => {
-      setDisplayedText(text.slice(0, index + 1));
-      setIndex((prev) => prev + 1);
-    }, 100);
-
-    if (index === text.length) {
-      clearInterval(typeInterval);
-      const resetTimeout = setTimeout(() => {
-        setDisplayedText('');
-        setIndex(0);
-      }, 7000); // ⏲️ reset ทุก 5 วิ
-      return () => clearTimeout(resetTimeout);
-    }
-
-    return () => clearInterval(typeInterval);
-  }, [index]);
+  // 🚀 ใช้ hook เพื่อจัดการ animation อย่างสวยงาม
+  const displayedText = useTypingEffect(UPLOAD_TEXT, 100, 7000);
 
   const { uploadPdfFiles, loading } = usePdfUploader();
 

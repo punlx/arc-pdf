@@ -1,4 +1,5 @@
 // src/api/wsChat.ts
+
 import { v4 as uuid } from 'uuid';
 
 export type WSChunk = {
@@ -17,6 +18,10 @@ type SendParams = {
   chat_id?: string | null;
 };
 
+// สร้าง WebSocket URL จาก Environment Variable เพื่อความสอดคล้องกัน
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+const WS_URL = API_BASE_URL.replace(/^http/, 'ws') + '/api/ws/chat';
+
 export function sendChatWS(
   params: SendParams,
   {
@@ -31,7 +36,7 @@ export function sendChatWS(
     onError: (msg: string) => void;
   }
 ) {
-  const ws = new WebSocket('ws://localhost:8000/api/ws/chat');
+  const ws = new WebSocket(WS_URL);
 
   ws.addEventListener('open', () => {
     ws.send(

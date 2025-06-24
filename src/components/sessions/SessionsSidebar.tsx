@@ -1,11 +1,12 @@
-// src\components\sessions\SessionsSidebar.tsx
+// src/components/sessions/SessionsSidebar.tsx
 
 import { Plus, Ellipsis, Trash, File } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fullReset } from '@/lib/fullReset';
 import { Button } from '@/components/ui/button';
-import { useSessionsStore } from '@/stores/sessionsStore';
+import { useSessionsStore, type SessionMeta } from '@/stores/sessionsStore';
 import { useChatStore } from '@/stores/chatStore';
+import { useFilesStore } from '@/stores/filesStore';
 
 import {
   DropdownMenu,
@@ -20,7 +21,7 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
-  SidebarMenu,
+  SidebarMenu, // 🆕 นำ SidebarMenu กลับเข้ามาใน import
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
@@ -30,154 +31,175 @@ import {
 
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { useFilesStore } from '@/stores/filesStore';
 import { ScrollArea } from '../ui/scroll-area';
 
-/* ---------- Sidebar open trigger (hamburger) ---------- */
-const SidebarOpenTrigger = () => {
-  const { isMobile, open, openMobile } = useSidebar();
+// ========================================================================
+//  "Dumb" Components (ส่วนแสดงผล)
+// ========================================================================
 
-  // ถ้าเป็น mobile ให้ดู openMobile, ถ้า desktop ดู open
-  const isClosed = isMobile ? !openMobile : !open;
+const NewChatButton = ({ onClick }: { onClick: () => void }) => (
+  <Button
+    onClick={onClick}
+    variant="ghost"
+    className="w-full border border-white flex gap-1 justify-center items-center rounded-full py-2 cursor-pointer"
+    type="button"
+  >
+    <Plus />
+    <span>New Chat</span>
+  </Button>
+);
 
-  return (
-    isClosed && (
-      <div className="fixed top-2 left-2 z-50">
-        <SidebarTrigger className="cursor-pointer" />
-      </div>
-    )
-  );
-};
-
-const NewChatButton = () => {
-  const resetChat = useChatStore((s) => s.reset);
-  const navigate = useNavigate();
-
-  /* ---------- sidebar control ---------- */
-  const { isMobile, setOpenMobile } = useSidebar();
-
-  /* ---------- New chat ---------- */
-  async function handleNewChat() {
-    resetChat(); // รีเซ็ตข้อความ
-    useFilesStore.getState().clear(); // ล้างรายชื่อไฟล์
-    navigate('/');
-    if (isMobile && typeof setOpenMobile === 'function') {
-      setOpenMobile(false); // หุบ sidebar เฉพาะ mobile
-    }
-  }
-  return (
-    <Button
-      onClick={handleNewChat}
-      variant="ghost"
-      className="w-full border border-white flex gap-1 justify-center items-center rounded-full py-2 cursor-pointer"
-      type="button"
-    >
-      <Plus />
-      <span>New Chat</span>
-    </Button>
-  );
-};
-
-/* ---------- Chat session item (ปิด sidebar อัตโนมัติบน mobile) ---------- */
-const ChatSessionItem = ({
+const SessionListItem = ({
   session,
-  bringToFront,
+  onSelect,
+  onDelete,
 }: {
-  session: any;
-  bringToFront: (id: string) => void;
+  session: SessionMeta;
+  onSelect: () => void;
+  onDelete: () => void;
 }) => {
-  const { isMobile, setOpenMobile } = useSidebar() as any;
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    bringToFront(session.chat_id);
-    navigate(`/${session.chat_id}`);
-    if (isMobile) setOpenMobile(false); // หุบ sidebar เฉพาะ mobile
-  };
-
   const labelText = session.first_question?.trim();
   const messageCount = session.message_count;
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton asChild className="flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-2 flex-1 min-w-0" onClick={onSelect}>
+            <span className="flex-1 min-w-0 truncate">{labelText}</span>
+            <Badge variant="default">{messageCount}</Badge>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Ellipsis />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-0">
+              <DropdownMenuItem className="flex justify-between" onClick={onDelete}>
+                <Trash />
+                <span>Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+};
 
+const SessionList = ({
+  sessions,
+  onSelectSession,
+  onDeleteSession,
+}: {
+  sessions: SessionMeta[];
+  onSelectSession: (chatId: string) => void;
+  onDeleteSession: (chatId: string) => void;
+}) => {
+  if (sessions.length === 0) {
+    return (
+      <p className="flex items-center gap-3 opacity-60">
+        <File />
+        <span>No sessions yet</span>
+      </p>
+    );
+  }
+
+  // 🔄 แก้ไข: เปลี่ยนจาก <div> มาใช้ <SidebarMenu> เป็นตัวหุ้มรายการทั้งหมด
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
-        <SidebarMenuButton asChild className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 flex-1 min-w-0" onClick={handleClick}>
-              <span className="flex-1 min-w-0 truncate">{labelText}</span>
-              <Badge variant="default">{messageCount}</Badge>
-            </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Ellipsis />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="min-w-0">
-                <DropdownMenuItem
-                  className="flex justify-between"
-                  onClick={() => {
-                    if (window.confirm('ลบแชตนี้ทั้งหมด ?')) {
-                      fullReset(session.chat_id);
-                    }
-                  }}
-                >
-                  <Trash />
-                  <span>Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
+      {sessions.map((s) => (
+        <SessionListItem
+          key={s.chat_id}
+          session={s}
+          onSelect={() => onSelectSession(s.chat_id)}
+          onDelete={() => onDeleteSession(s.chat_id)}
+        />
+      ))}
     </SidebarMenu>
   );
 };
 
-export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
-  const sessions = useSessionsStore((s) => s.sessions);
-  const bringToFront = useSessionsStore((s) => s.bringToFront);
+// ========================================================================
+// "Smart" Component (ส่วนจัดการ Logic)
+// ========================================================================
+
+const SidebarOpenTrigger = () => {
+  const { isMobile, open, openMobile } = useSidebar();
+  const isClosed = isMobile ? !openMobile : !open;
+  return isClosed ? (
+    <div className="fixed top-2 left-2 z-50">
+      <SidebarTrigger className="cursor-pointer" />
+    </div>
+  ) : null;
+};
+
+const SidebarLayout = ({ children }: { children: ReactNode }) => {
+  const { sessions, bringToFront } = useSessionsStore();
+  const resetChat = useChatStore((s) => s.reset);
+  const clearFiles = useFilesStore((s) => s.clear);
+  const navigate = useNavigate();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleNewChat = () => {
+    resetChat();
+    clearFiles();
+    navigate('/');
+    if (isMobile && typeof setOpenMobile === 'function') {
+      setOpenMobile(false);
+    }
+  };
+
+  const handleSelectSession = (chatId: string) => {
+    bringToFront(chatId);
+    navigate(`/${chatId}`);
+    if (isMobile && typeof setOpenMobile === 'function') {
+      setOpenMobile(false);
+    }
+  };
+
+  const handleDeleteSession = (chatId: string) => {
+    if (window.confirm('ลบแชตนี้ทั้งหมด ?')) {
+      fullReset(chatId, navigate);
+    }
+  };
 
   return (
-    <SidebarProvider>
+    <>
       <SidebarOpenTrigger />
-
       <Sidebar collapsible="offcanvas">
-        {/* เพิ่ม h-full ให้เต็มความสูง แล้วคง gap-6 เดิม */}
         <div className="flex flex-col gap-6 h-full">
           <SidebarHeader className="items-center justify-between pt-4">
             <img src={LogoImg} width={128} alt="Logo" className="ml-3" />
             <SidebarTrigger className="cursor-pointer" />
           </SidebarHeader>
-
-          {/* ปุ่ม New Chat (คง flex-none) */}
           <SidebarContent className="flex-none px-4">
-            <NewChatButton></NewChatButton>
+            <NewChatButton onClick={handleNewChat} />
           </SidebarContent>
-
-          {/* โซนรายการแชต สกอลล์ได้ */}
           <SidebarContent className="pl-4">
             <ScrollArea className="h-full w-full pr-4">
               <div className="opacity-60 mb-3">Chats</div>
               <Separator />
-
-              {sessions.length === 0 && (
-                <p className="flex items-center gap-3 opacity-60">
-                  <File />
-                  <span>No sessions yet</span>
-                </p>
-              )}
-
-              <div className="flex flex-col gap-1 mt-3 pb-4">
-                {sessions.map((s) => (
-                  <ChatSessionItem key={s.chat_id} session={s} bringToFront={bringToFront} />
-                ))}
-              </div>
+              <SessionList
+                sessions={sessions}
+                onSelectSession={handleSelectSession}
+                onDeleteSession={handleDeleteSession}
+              />
             </ScrollArea>
           </SidebarContent>
         </div>
       </Sidebar>
-
       {children}
+    </>
+  );
+};
+
+// ========================================================================
+// The Main Exported Component (ตัวหลักที่ Export ออกไป)
+// ========================================================================
+
+export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
+  return (
+    <SidebarProvider>
+      <SidebarLayout>{children}</SidebarLayout>
     </SidebarProvider>
   );
 };

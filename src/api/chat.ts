@@ -1,6 +1,6 @@
 // src/api/chat.ts
+
 import { z } from 'zod';
-import axios, { AxiosError } from 'axios';
 import { client } from './client';
 
 export type ChatSummary = {
@@ -34,7 +34,7 @@ export type ChatResponse = z.infer<typeof chatResSchema>;
 /**
  * POST /api/chat
  *
- * @param body          – payload (question, chat_id?)
+ * @param body        – payload (question, chat_id?)
  * @param opts.validateInput   – เปิด/ปิด validation request (default true)
  * @param opts.validateOutput  – เปิด/ปิด validation response (default true)
  *
@@ -57,18 +57,16 @@ export async function sendChat(
     /* 3) ตรวจ response */
     return validateOutput ? chatResSchema.parse(res.data) : (res.data as ChatResponse);
   } catch (err) {
-    /* ── รวม error ให้สวยงาม ── */
+    /* ── จัดการ Error ── */
+    // ZodError เกิดจากการ parse ฝั่ง client ไม่ผ่าน (อาจเป็น request หรือ response)
+    // เราต้อง re-throw เพื่อให้ UI นำไปจัดการต่อได้
     if (err instanceof z.ZodError) {
-      /* schema ผิดพลาด (request / response) */
       throw err;
     }
 
-    if (axios.isAxiosError(err)) {
-      const ax = err as AxiosError<{ detail?: string }>;
-      const detail = ax.response?.data?.detail;
-      throw new Error(detail ?? ax.message);
-    }
-
+    // Error อื่นๆ เช่น Network Error หรือ Server Error (4xx, 5xx)
+    // จะถูกจัดการโดย axios interceptor ซึ่งจะแปลงเป็น Error object มาตรฐานให้แล้ว
+    // ดังนั้นเราสามารถ throw ต่อไปได้เลย
     throw err as Error;
   }
 }

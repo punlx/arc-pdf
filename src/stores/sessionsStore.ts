@@ -1,5 +1,7 @@
-// src\stores\sessionsStore.ts
+// src/stores/sessionsStore.ts
+
 import { create } from 'zustand';
+import { deduplicateByKey } from '@/lib/utils';
 
 export interface SessionMeta {
   chat_id: string;
@@ -18,19 +20,21 @@ interface SessionsState {
   clear: () => void;
 }
 
+const dedupSessions = (sessions: SessionMeta[]) => deduplicateByKey(sessions, 'chat_id');
+
 export const useSessionsStore = create<SessionsState>((set) => ({
   sessions: [],
 
   /* รับจาก backend → เก็บเฉพาะที่มีข้อความแล้ว */
   setSessions: (incoming) =>
     set(() => ({
-      sessions: dedup(incoming.filter((s) => s.message_count > 0)),
+      sessions: dedupSessions(incoming.filter((s) => s.message_count > 0)),
     })),
 
   /* ใส่เข้ามือเมื่อมี Q/A รอบแรกเสร็จ */
   addSession: (s) =>
     set((state) => ({
-      sessions: dedup([s, ...state.sessions]),
+      sessions: dedupSessions([s, ...state.sessions]),
     })),
 
   removeSession: (id) =>
@@ -49,12 +53,3 @@ export const useSessionsStore = create<SessionsState>((set) => ({
 
   clear: () => set({ sessions: [] }),
 }));
-
-function dedup(arr: SessionMeta[]) {
-  const seen = new Set<string>();
-  return arr.filter((s) => {
-    if (seen.has(s.chat_id)) return false;
-    seen.add(s.chat_id);
-    return true;
-  });
-}

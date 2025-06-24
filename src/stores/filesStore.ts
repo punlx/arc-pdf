@@ -1,5 +1,7 @@
 // src/stores/filesStore.ts
+
 import { create } from 'zustand';
+import { deduplicateByKey } from '@/lib/utils';
 
 export interface UploadFileMeta {
   id: string;
@@ -16,29 +18,21 @@ interface FilesState {
   clear: () => void;
 }
 
+const dedupFiles = (files: UploadFileMeta[]) =>
+  deduplicateByKey(files, 'filename', (name) => name.toLowerCase());
+
 export const useFilesStore = create<FilesState>((set) => ({
   files: [],
 
   setFiles: (
     fs // แทนที่ทั้งก้อน
-  ) => set({ files: dedup(fs) }),
+  ) => set({ files: dedupFiles(fs) }),
 
   addMany: (
     fs // เติมเข้า list เดิม
-  ) => set((s) => ({ files: dedup([...s.files, ...fs]) })),
+  ) => set((s) => ({ files: dedupFiles([...s.files, ...fs]) })),
 
   deleteById: (id) => set((s) => ({ files: s.files.filter((f) => f.id !== id) })),
 
   clear: () => set({ files: [] }),
 }));
-
-/* ---------- util: ลบซ้ำโดย filename (ไม่สน id) ---------- */
-function dedup(arr: UploadFileMeta[]) {
-  const seen = new Set<string>();
-  return arr.filter((f) => {
-    const name = f.filename.toLowerCase();
-    if (seen.has(name)) return false;
-    seen.add(name);
-    return true;
-  });
-}

@@ -1,6 +1,6 @@
 // src/components/upload/FileList.tsx
 import { useFilesStore } from '@/stores/filesStore';
-import { FileText, Trash } from 'lucide-react'; // 🆕
+import { FileText } from 'lucide-react'; // 🆕
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { deleteFile } from '@/api/files'; // 🆕
 import { toast } from 'sonner'; // 🆕
