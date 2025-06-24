@@ -2,11 +2,20 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from '@/components/ui/sheet';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useFilesStore } from '@/stores/filesStore';
 import { cn } from '@/lib/utils';
 import { FileList } from './FileList';
 import { DropZone } from './DropZone';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 /* ---------- ชนิดข้อมูลไฟล์ ---------- */
 interface FileMeta {
@@ -76,6 +85,9 @@ export const UploadPanel = () => {
   const visibleFiles = files.slice(0, visibleCount);
   const hiddenCount = Math.max(files.length - visibleCount, 0);
 
+  /* ---------- mobile ---------- */
+  const isMobileScreen = useIsMobile();
+
   /* ---------- UI ---------- */
   return (
     <div className={cn('flex items-center gap-3 w-full overflow-hidden')}>
@@ -89,7 +101,7 @@ export const UploadPanel = () => {
             <TooltipTrigger asChild>
               <div
                 ref={(el) => registerTag(f.id, el)}
-                className="bg-background max-w-[260px] border-3 text-foreground truncate text-xs font-normal px-3 py-1 rounded-full"
+                className="bg-background max-w-[260px] min-w-[100px] border-3 text-foreground truncate text-xs font-normal px-3 py-1 rounded-full"
               >
                 {f.filename}
               </div>
@@ -99,27 +111,57 @@ export const UploadPanel = () => {
         ))}
       </div>
 
-      {/* 3️⃣  +n (ถ้ามีไฟล์เกินพื้นที่) */}
-      {hiddenCount > 0 && (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Badge
-              ref={badgeRef}
-              variant="outline"
-              className="border-3 cursor-pointer px-2 py-2 text-xs font-medium shrink-0"
-            >
-              +{hiddenCount}
-            </Badge>
-          </PopoverTrigger>
+      {/* 3️⃣  +n (แสดง Popover หรือ Drawer ตามขนาดหน้าจอ) */}
+      {hiddenCount > 0 &&
+        (isMobileScreen ? (
+          /* ─── Drawer (mobile) ─── */
+          <Sheet>
+            <SheetTrigger asChild>
+              <Badge
+                ref={badgeRef}
+                variant="outline"
+                className="border-3 cursor-pointer px-2 py-2 text-xs font-medium shrink-0"
+              >
+                +{hiddenCount}
+              </Badge>
+            </SheetTrigger>
 
-          <PopoverContent side="top" align="center" className="w-90 flex flex-col gap-4">
-            <header className="flex justify-between items-center">
-              <span className="font-medium text-sm">All files ({files.length})</span>
-            </header>
-            <FileList />
-          </PopoverContent>
-        </Popover>
-      )}
+            <SheetContent
+              side="bottom"
+              className="w-full gap-0 max-w-none rounded-t-2xl border-t-2 shadow-lg bg-background"
+            >
+              <SheetHeader className="flex flex-row items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <SheetTitle>All files ({files.length})</SheetTitle>
+                </div>
+                <SheetClose asChild />
+              </SheetHeader>
+
+              {/* body */}
+              <FileList />
+            </SheetContent>
+          </Sheet>
+        ) : (
+          /* ─── Popover (desktop / tablet) ─── */
+          <Popover>
+            <PopoverTrigger asChild>
+              <Badge
+                ref={badgeRef}
+                variant="outline"
+                className="border-3 cursor-pointer px-2 py-2 text-xs font-medium shrink-0"
+              >
+                +{hiddenCount}
+              </Badge>
+            </PopoverTrigger>
+
+            <PopoverContent side="top" align="center" className="w-90 flex flex-col gap-4">
+              <header className="flex justify-between items-center">
+                <span className="font-medium text-sm">All files ({files.length})</span>
+              </header>
+              <FileList />
+            </PopoverContent>
+          </Popover>
+        ))}
     </div>
   );
 };
