@@ -1,7 +1,5 @@
-// src/components/upload/DropZone.tsx
+// src/hooks/usePdfUploader.ts
 import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { FileUp, Loader2, UploadCloud } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,28 +7,24 @@ import { uploadFiles } from '@/api/upload';
 import { client } from '@/api/client';
 import { useFilesStore } from '@/stores/filesStore';
 import { useChatStore } from '@/stores/chatStore';
-import { cn } from '@/lib/utils';
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 
-export const DropZone = () => {
-  /* ---------- stores ---------- */
+export function usePdfUploader() {
+  const [loading, setLoading] = useState(false);
+
   const addMany = useFilesStore((s) => s.addMany);
   const curFiles = useFilesStore((s) => s.files);
 
   const { chatId, setChatId } = useChatStore();
-
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  /* ---------- onDrop ---------- */
-  const onDrop = useCallback(
-    async (accepted: File[]) => {
-      if (!accepted.length) return;
+  const handleFiles = useCallback(
+    async (files: File[]) => {
+      if (!files.length) return;
 
-      /* 1) กันชื่อซ้ำ & ไฟล์เกิน ขนาด */
       const curNames = new Set(curFiles.map((f) => f.filename.toLowerCase()));
-      const deduped = accepted.filter((f) => !curNames.has(f.name.toLowerCase()));
+      const deduped = files.filter((f) => !curNames.has(f.name.toLowerCase()));
       if (!deduped.length) {
         toast.warning('ไฟล์ที่เลือกมีอยู่แล้วทั้งหมด');
         return;
@@ -49,22 +43,19 @@ export const DropZone = () => {
       const valid = deduped.filter((f) => f.size <= MAX_SIZE);
       if (!valid.length) return;
 
-      /* 2) สร้าง chatId ถ้ายังไม่มี (แต่ **ไม่** addSession) */
       let targetId = chatId;
       if (!targetId) {
         try {
           const res = await client.post('/api/chat/create');
           targetId = res.data.chat_id as string;
-
-          setChatId(targetId); // เพียงเก็บไว้ใช้ระหว่างหน้า
-          navigate(`/${targetId}`); // เปลี่ยน route ไป /:chatId
+          setChatId(targetId);
+          navigate(`/${targetId}`);
         } catch (e: any) {
           toast.error(e?.message ?? 'ไม่สามารถสร้าง session');
           return;
         }
       }
 
-      /* 3) อัปโหลด */
       setLoading(true);
       try {
         const data = await uploadFiles(valid, targetId);
@@ -79,26 +70,8 @@ export const DropZone = () => {
     [curFiles, chatId, setChatId, addMany, navigate]
   );
 
-  /* ---------- react-dropzone ---------- */
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { 'application/pdf': [] },
-    multiple: true,
-  });
-
-  /* ---------- UI ---------- */
-  return (
-    <div
-      {...getRootProps()}
-      className={cn(
-        'flex items-center justify-center cursor-pointer',
-        'focus-visible:ring-2 focus-visible:ring-ring',
-        loading && 'pointer-events-none'
-      )}
-    >
-      <input {...getInputProps()} />
-
-      {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileUp />}
-    </div>
-  );
-};
+  return {
+    uploadPdfFiles: handleFiles,
+    loading,
+  };
+}

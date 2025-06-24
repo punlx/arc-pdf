@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@config "../tailwind.config.js";
 
 html,
 body,
@@ -78,10 +79,13 @@ body,
   --sidebar-foreground: white;
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-accent: #605aff;
+  --sidebar-accent-foreground: oklch(100% 0.00011 271.152);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* app */
+  --mascot-background: rgb(242, 243, 253);
 }
 
 .dark {
@@ -116,6 +120,9 @@ body,
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* app */
+  --mascot-background: rgba(28, 29, 43, 0.4);
 }
 
 @layer base {

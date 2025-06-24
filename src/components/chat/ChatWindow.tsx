@@ -15,13 +15,11 @@ export const ChatWindow = () => {
   }, [messages]);
 
   return (
-    <ScrollArea className="flex-1 px-4 py-2 overflow-y-auto">
-      <div className="flex flex-col gap-3">
-        {messages.map((m) => (
-          <MessageBubble key={m.id} m={m} />
-        ))}
-        <div ref={bottomRef} />
-      </div>
-    </ScrollArea>
+    <div className="flex flex-col gap-3">
+      {messages.map((m) => (
+        <MessageBubble key={m.id} m={m} />
+      ))}
+      <div ref={bottomRef} />
+    </div>
   );
 };

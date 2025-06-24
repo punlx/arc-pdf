@@ -2,6 +2,12 @@
 export default {
   darkMode: 'class', // ✅  ตั้งไว้แล้ว
   content: ['./index.html', './src/**/*.{ts,tsx}'],
-  theme: { extend: {} },
+  theme: {
+    extend: {
+      colors: {
+        'mascot-background': 'var(--mascot-background)',
+      },
+    },
+  },
   plugins: [],
 };

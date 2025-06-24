@@ -1,10 +1,11 @@
+// src/components/chat/ChatPanel.tsx
+import { ChatWindow } from '../components/chat/ChatWindow';
+import { InputBar } from '../components/chat/InputBar';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { useFilesSync } from '@/hooks/useFilesSync';
 import { useSessionsSync } from '@/hooks/useSessionsSync';
-import { UploadPanel } from '@/components/upload/UploadPanel';
-import { ChatPanel } from '@/components/chat/ChatPanel';
 import { client } from '@/api/client';
 import { useChatStore, type Message } from '@/stores/chatStore';
 import { useSessionsStore } from '@/stores/sessionsStore';
@@ -19,7 +20,7 @@ interface ChatEntry {
   chat_id: string;
 }
 
-export const ChatSessionPage = () => {
+export const ChatPage = () => {
   const { chatId: paramId } = useParams<{ chatId?: string }>();
   const navigate = useNavigate();
 
@@ -71,12 +72,11 @@ export const ChatSessionPage = () => {
   }, [paramId, setChatId, setMessages, addSession, navigate, resetChat]);
 
   return (
-    <>
-      <div className="hidden lg:block">
-        <UploadPanel />
+    <div className="h-[calc(100vh-60px)] py-8 flex justify-center">
+      <div className="transition-all max-lg:w-[500px] max-xl:w-[600px] max-2xl:w-[700px] 2xl:w-[900px]">
+        <ChatWindow />
+        <InputBar />
       </div>
-
-      <ChatPanel />
-    </>
+    </div>
   );
 };

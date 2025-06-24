@@ -26,7 +26,7 @@ export const FileList = () => {
   }
 
   return (
-    <ScrollArea className="h-48 mt-4 pr-2">
+    <ScrollArea className="h-52 pr-2">
       <ul className="space-y-2">
         {files.map((f) => (
           <li key={f.id} className="flex items-center gap-2 text-sm border rounded-md px-3 py-2">

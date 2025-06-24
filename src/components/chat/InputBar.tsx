@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SendHorizonal, Loader2 } from 'lucide-react';
+import { SendHorizonal, Loader2, FileUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -14,6 +14,10 @@ import { useSessionsStore } from '@/stores/sessionsStore';
 import { sendChat } from '@/api/chat';
 import { sendChatWS, genTempId } from '@/api/wsChat';
 import { client } from '@/api/client';
+import { usePdfUploader } from '@/hooks/usePdfUploader';
+import { useDropzone } from 'react-dropzone';
+import { FileList } from '../upload/FileList';
+import { UploadPanel } from '../upload/UploadPanel';
 
 export const InputBar = () => {
   const [text, setText] = useState('');
@@ -140,23 +144,41 @@ export const InputBar = () => {
       setSending(false);
     }
   }
+  // v2
+  const { uploadPdfFiles, loading } = usePdfUploader();
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: uploadPdfFiles,
+    accept: { 'application/pdf': [] },
+    multiple: true,
+  });
 
   /* ──────────── UI ──────────── */
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t p-3">
-      <Input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="ถามอะไรเกี่ยวกับ PDF…"
-        disabled={sending}
-      />
-      <Button type="submit" disabled={sending || !text.trim() || !hasFiles}>
-        {sending ? (
-          <Loader2 className="animate-spin h-4 w-4" />
-        ) : (
-          <SendHorizonal className="h-4 w-4" />
-        )}
-      </Button>
+    <form
+      onSubmit={handleSubmit}
+      className="flex items-center gap-2 sticky bottom-8 z-50 bg-background"
+    >
+      <div className="w-full bg-background p-4 border-2 rounded-4xl flex flex-col gap-4">
+        <Input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Ask anything..."
+          className="border-none focus-visible:shadow-none"
+          disabled={sending}
+        />
+        <div className="flex justify-between">
+          <UploadPanel></UploadPanel>
+
+          <Button type="submit" variant={'outline'} disabled={sending || !text.trim() || !hasFiles}>
+            {sending ? (
+              <Loader2 className="animate-spin h-4 w-4" />
+            ) : (
+              <SendHorizonal className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      </div>
     </form>
   );
 };
