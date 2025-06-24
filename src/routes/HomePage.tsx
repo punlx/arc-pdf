@@ -22,7 +22,7 @@ export const HomePage = () => {
 
   return (
     <div className="flex items-center justify-center h-full flex-col gap-4">
-      <div className="px-8 py-4 border-2 border-foreground rounded-full text-2xl font-medium font-mono whitespace-pre relative top-[50px] z-10">
+      <div className="px-8 py-4 border-2 border-foreground rounded-full max-sm:text-sm max-md:text-lg text-2xl font-medium font-mono whitespace-pre relative top-[50px] z-10">
         {displayedText}
       </div>
       <div
@@ -40,7 +40,7 @@ export const HomePage = () => {
           <p className="text-sm">Uploading…</p>
         </>
       ) : (
-        <div className="text-xl font-extralight opacity-50 relative bottom-[60px] z-10">
+        <div className="text-xl max-sm:text-sm max-md:text-lg font-extralight text-center opacity-50 relative bottom-[60px] z-10">
           {isDragActive ? 'Drop Here!!' : 'Drag and drop your PDF here, or click to select a file'}
         </div>
       )}

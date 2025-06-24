@@ -4,6 +4,8 @@ import { useRef, useEffect } from 'react';
 import { useChatStore } from '@/stores/chatStore';
 import { MessageBubble } from './MessageBubble';
 
+export const FirstChatText = `What do you want to know about?`;
+
 export const ChatWindow = () => {
   const messages = useChatStore((s) => s.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -22,7 +24,7 @@ export const ChatWindow = () => {
       {messages.length ? (
         messages.map((m) => <MessageBubble key={m.id} m={m} />)
       ) : (
-        <div className="text-center text-2xl pt-24">What do you want to know about this PDF?</div>
+        <div className="text-center text-2xl pt-24">{FirstChatText}</div>
       )}
       <div ref={bottomRef} />
     </div>

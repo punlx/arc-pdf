@@ -1,7 +1,7 @@
 // src/components/chat/__test__/ChatWindow.test.tsx
 
 import { render, screen } from '@testing-library/react';
-import { ChatWindow } from '../ChatWindow';
+import { ChatWindow, FirstChatText } from '../ChatWindow';
 import { useChatStore, type Message, type ChatState } from '@/stores/chatStore'; // 🆕 Import State type
 
 // Mock Child Component
@@ -35,7 +35,7 @@ describe('<ChatWindow />', () => {
     render(<ChatWindow />);
 
     // Assert
-    expect(screen.getByText(/What do you want to know about this PDF?/i)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(FirstChatText, 'i'))).toBeInTheDocument();
     expect(screen.queryByTestId('message-bubble')).not.toBeInTheDocument();
   });
 
