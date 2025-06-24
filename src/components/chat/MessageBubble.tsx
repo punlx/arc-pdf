@@ -16,7 +16,7 @@ export const MessageBubble = ({ m }: { m: Message }) => {
       )}
     >
       <p className="whitespace-pre-line">
-        {isTyping ? <span className="animate-pulse">กำลังโหลด…</span> : m.text}
+        {isTyping ? <span className="animate-pulse">Thinking...</span> : m.text}
       </p>
 
       {m.source && !isUser && !isTyping && (
