@@ -1,6 +1,6 @@
-// src/components/ui/__stories__/badge.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from '../badge';
+import { within, expect } from '@storybook/test';
 
 const meta: Meta<typeof Badge> = {
   title: 'UI/Badge',
@@ -20,3 +20,11 @@ type Story = StoryObj<typeof Badge>;
 
 export const Playground: Story = {};
 export const Outline: Story = { args: { variant: 'outline' } };
+
+/* interaction – แค่ตรวจเนื้อหา / role */
+export const Renders: Story = {
+  play: async ({ canvasElement, args }) => {
+    const badge = within(canvasElement).getByText(args.children as string);
+    expect(badge).toBeInTheDocument();
+  },
+};

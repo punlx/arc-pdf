@@ -1,10 +1,10 @@
-name: Frontend CI # Build & Unit-test (Render auto-deploys via webhook)
+name: Frontend CI # Build, Unit-test & Interaction-test
 
 on:
   push:
-    branches: [main] # รันบน main
+    branches: [main] # รันบน main ทุก push
     paths: ['**'] # repo นี้มีแต่ FE
-  pull_request: # รันบน PR
+  pull_request: # รันบนทุก PR
     paths: ['**']
   workflow_dispatch:
 
@@ -13,30 +13,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ───────────── Clone repo ─────────────
+      # ───────────── 1) Clone repo ─────────────
       - uses: actions/checkout@v4
 
-      # ───────────── Setup Node & cache ─────────────
+      # ───────────── 2) Setup Node & cache ─────────────
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20 # ใช้ 20 ตามเดิม (ถ้าอยากเทสต์หลายเวอร์ชันใช้ matrix)
           cache: yarn
           cache-dependency-path: yarn.lock
 
-      # ───────────── Install deps ─────────────
+      # ───────────── 3) Install deps ─────────────
       - run: yarn install --frozen-lockfile
 
-      # ───────────── Unit / Component tests ─────────────
-      - run: yarn test
+      # # ───────────── 4) Lint (optional แต่แนะนำ) ─────────────
+      # - run: yarn lint
 
-      # ───────────── Build production bundle ─────────────
-      - run: yarn build # vite + tsc
+      # ───────────── 5) Unit / Component tests ─────────────
+      - run: yarn test # vitest project หลัก
 
-      # ───────────── Ensure Dockerfile.prod builds ─────────────
+      # ───────────── 6) Storybook Interaction tests ─────────────
+      - name: Storybook interaction tests
+        run: yarn test:sb # vitest --project=storybook
+
+      # ───────────── 7) Build production bundle (Vite + TSC) ─────────────
+      - run: yarn build
+
+      # ───────────── 8) Build static Storybook (จับ production break) ─────────────
+      - run: yarn build-storybook --quiet
+
+      # ───────────── 9) Ensure Dockerfile.prod builds ─────────────
       - name: Docker build (no push)
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile.prod
-          push: false # ไม่ส่ง image แค่ลอง build ให้ผ่าน
+          push: false # ไม่ push image แค่ตรวจ build ผ่าน

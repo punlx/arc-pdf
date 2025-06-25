@@ -4,12 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 const config: StorybookConfig = {
   /* ---------- 1. กำหนด glob สองแบบ ---------- */
-  stories: [
-    // ① MDX docs (ถ้ามี)
-    '../src/**/*.mdx',
-    // ② สตอรีที่อยู่ในโฟลเดอร์ __stories__
-    '../src/**/__stories__/*.stories.@(ts|tsx)',
-  ],
+  stories: ['../src/**/__stories__/*.stories.@(ts|tsx)'],
 
   /* ---------- 2. Addons ที่ CLI ติดตั้งให้แล้ว ---------- */
   addons: [
@@ -18,6 +13,7 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     '@storybook/addon-interactions',
     '@storybook/addon-vitest',
+    '@storybook/addon-docs',
   ],
 
   /* ---------- 3. Framework & Docs ---------- */
