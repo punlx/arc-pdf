@@ -1,14 +1,40 @@
-name: 'Chromatic'
-on: [push, pull_request]
+name: Chromatic visual tests
+
+on:
+  pull_request: # รันทุก PR
+  push:
+    branches: [main] # และทุก push เข้า main (ตั้ง baseline)
+  workflow_dispatch:
+
 jobs:
   chromatic:
     runs-on: ubuntu-latest
+
     steps:
+      # ───── 1. Checkout ─────
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2 # หรือ setup-node
-        with: { version: 9 }
-      - run: pnpm install
-      - uses: chromaui/action@v1
+
+      # ───── 2. Setup Node + cache ─────
+      - uses: actions/setup-node@v4
         with:
-          token: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          node-version: 20
+          cache: yarn # เปลี่ยนเป็น pnpm/npm ได้ตามโปรเจ็กต์
+          cache-dependency-path: yarn.lock
+
+      # ───── 3. Install deps ─────
+      - run: yarn install --frozen-lockfile
+
+      # ───── 4. Publish to Chromatic ─────
+      - name: Chromatic publish
+        uses: chromaui/action@v1
+        with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+          # รับ diff เข้า baseline อัตโนมัติ **เฉพาะ** main
+          autoAcceptChanges: 'main'
+
+          # ถ้ามี diff ให้ Action "ล้ม" ↴ เพื่อให้ PR เป็นแดง
+          exitZeroOnChanges: false
+
+          # เร็วขึ้น: upload แล้วจบ job เลย (ไม่ต้องรอ CI ฝั่ง Chromatic)
+          exitOnceUploaded: true

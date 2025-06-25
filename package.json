@@ -15,7 +15,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test:sb": "vitest run --project=storybook --silent",
-    "test:ui": "vitest --ui --project=storybook"
+    "test:ui": "vitest --ui --project=storybook",
+    "chromatic": "npx chromatic --project-token=chpt_a91e2edff3d70a0"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
