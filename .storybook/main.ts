@@ -8,11 +8,11 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-links',
 
-    // 👇 ปิดเฉพาะ Toolbar (ฟีเจอร์อื่นของ essentials ยังใช้ได้)
+    // 👇 ปิด Toolbar อย่างถูก syntax
     {
       name: '@storybook/addon-essentials',
-      options: {ฟ
-        toolbar: false, // <<< KEY LINE
+      options: {
+        toolbar: false, // ← ต้องมี ":" และปิด "}," ให้ครบ
       },
     },
 
