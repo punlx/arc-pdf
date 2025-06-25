@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
+    # .github/workflows/e2e-smoke.yml
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # ให้ Playwright เห็น commit history เผื่อ trace
+        with: { fetch-depth: 0 }
 
       - uses: actions/setup-node@v4
         with:
@@ -25,11 +25,12 @@ jobs:
           cache: yarn
           cache-dependency-path: yarn.lock
 
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile # ⬅ deps
+      - run: yarn build # ⬅ เพิ่ม build Vite **สำคัญ**
 
-      # ดาวน์โหลด Chrome-headless ที่ Playwright ใช้
-      - run: npx playwright install --with-deps chromium
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
 
-      # 👉 รันเฉพาะ smoke tag
       - name: Run smoke tests
-        run: npx playwright test --grep @smoke
+        run: npx playwright test --grep @smoke # ไม่ต้อง --project ก็ได้แล้ว
+
