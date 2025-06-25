@@ -1,5 +1,3 @@
-// src/components/sessions/SessionsSidebar.tsx
-
 import { Plus, Ellipsis, Trash, File } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { fullReset } from '@/lib/fullReset';
@@ -32,10 +30,6 @@ import {
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
-
-// ========================================================================
-//  "Dumb" Components (ส่วนแสดงผล)
-// ========================================================================
 
 const NewChatButton = ({ onClick }: { onClick: () => void }) => (
   <Button
@@ -124,10 +118,6 @@ const SessionList = ({
   );
 };
 
-// ========================================================================
-// "Smart" Component (ส่วนจัดการ Logic)
-// ========================================================================
-
 const SidebarOpenTrigger = () => {
   const { isMobile, open, openMobile } = useSidebar();
   const isClosed = isMobile ? !openMobile : !open;
@@ -158,7 +148,6 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
   const handleSelectSession = (chatId: string) => {
     bringToFront(chatId);
 
-    // 🆕 ค้นหา session ที่เลือกเพื่อเอา first_question
     const selectedSession = sessions.find((s) => s.chat_id === chatId);
     if (selectedSession?.first_question) {
       document.title = `ArcPDF - ${selectedSession.first_question}`;
@@ -208,10 +197,6 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
     </>
   );
 };
-
-// ========================================================================
-// The Main Exported Component (ตัวหลักที่ Export ออกไป)
-// ========================================================================
 
 export const SessionsSidebar = ({ children }: { children: ReactNode }) => {
   return (

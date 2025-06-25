@@ -1,5 +1,3 @@
-// src/components/chat/MessageBubble.tsx
-
 import clsx from 'clsx';
 import { Clipboard } from 'lucide-react';
 import { type Message } from '@/stores/chatStore';
@@ -10,7 +8,6 @@ export const MessageBubble = ({ m }: { m: Message }) => {
 
   return (
     <div
-      // 🆕 เพิ่ม data-testid
       data-testid="message-bubble"
       className={clsx(
         'max-w-[90%] max-sm:max-w-[95%] rounded-md p-4 text-sm',

@@ -1,5 +1,3 @@
-// src/components/layout/MobileSettingsSheet.tsx
-
 import { Settings, MessageSquare, Glasses } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';

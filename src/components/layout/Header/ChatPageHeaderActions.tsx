@@ -1,5 +1,3 @@
-// src/components/layout/ChatPageHeaderActions.tsx
-
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { MemoryBadge } from '@/components/memory/MemoryBadge';
@@ -27,7 +25,6 @@ export const ChatPageHeaderActions = () => {
         Reset
       </Button>
 
-      {/* Desktop Actions */}
       {!isMobileScreen && (
         <>
           <StreamModeToggle />
@@ -35,7 +32,6 @@ export const ChatPageHeaderActions = () => {
         </>
       )}
 
-      {/* Mobile Actions */}
       {isMobileScreen && <MobileSettingsSheet />}
     </>
   );

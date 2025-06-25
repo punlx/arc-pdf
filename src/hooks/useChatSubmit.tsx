@@ -1,5 +1,3 @@
-// src/hooks/useChatSubmit.ts
-
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
@@ -80,11 +78,6 @@ export function useChatSubmit() {
       return;
     }
 
-    /* ---------------------------------------------------------------- */
-    /* ----------- REST (non-stream) - ส่วนที่แก้ไข ------------------ */
-    /* ---------------------------------------------------------------- */
-
-    // 🆕 1. สร้าง ID ชั่วคราวและเพิ่ม "Thinking..." bubble ทันที
     const botId = genTempId();
     addMessage({ id: botId, role: 'bot', text: '...' });
 
@@ -94,9 +87,8 @@ export function useChatSubmit() {
         chat_id: chatId ?? undefined,
       });
 
-      // ✅ 2. เมื่อสำเร็จ, "อัปเดต" bubble เดิมด้วยข้อมูลจริง
       updateMessage(botId, {
-        id: res.id, // อัปเดต ID ให้เป็น ID จริงจาก server
+        id: res.id,
         text: res.answer,
         source: res.source,
       });
@@ -115,7 +107,6 @@ export function useChatSubmit() {
 
       toast.error(msg);
 
-      // ❌ 3. เมื่อพลาด, "อัปเดต" bubble เดิมด้วยข้อความ error
       updateMessage(botId, {
         text: `❌ ${msg}`,
       });

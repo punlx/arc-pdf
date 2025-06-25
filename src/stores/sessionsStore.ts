@@ -1,5 +1,3 @@
-// src/stores/sessionsStore.ts
-
 import { create } from 'zustand';
 import { deduplicateByKey } from '@/lib/utils';
 
@@ -25,13 +23,11 @@ const dedupSessions = (sessions: SessionMeta[]) => deduplicateByKey(sessions, 'c
 export const useSessionsStore = create<SessionsState>((set) => ({
   sessions: [],
 
-  /* รับจาก backend → เก็บเฉพาะที่มีข้อความแล้ว */
   setSessions: (incoming) =>
     set(() => ({
       sessions: dedupSessions(incoming.filter((s) => s.message_count > 0)),
     })),
 
-  /* ใส่เข้ามือเมื่อมี Q/A รอบแรกเสร็จ */
   addSession: (s) =>
     set((state) => ({
       sessions: dedupSessions([s, ...state.sessions]),

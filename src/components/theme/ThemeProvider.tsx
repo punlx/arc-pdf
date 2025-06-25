@@ -1,4 +1,3 @@
-// src/components/ThemeProvider.tsx
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import type { ReactNode } from 'react';
 

@@ -1,9 +1,7 @@
-// e2e/helpers/mockServer.ts
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
 export const server = setupServer(
-  // ✅ เพิ่ม Mock นี้เข้าไป
   http.post('http://localhost:8000/api/chat/create', () =>
     HttpResponse.json({ chat_id: 'mock-chat-id-123' })
   ),

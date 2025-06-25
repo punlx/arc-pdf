@@ -1,5 +1,3 @@
-// src/hooks/useChatHistory.ts
-
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { client } from '@/api/client';
@@ -21,7 +19,6 @@ export function useChatHistory(chatId: string | undefined) {
   const { addSession, sessions } = useSessionsStore();
 
   useEffect(() => {
-    // ถ้าไม่มี chatId ใน URL (เช่น อยู่ที่หน้าแรก) ให้รีเซ็ต state ของแชท
     if (!chatId) {
       resetChat();
       return;
@@ -32,7 +29,6 @@ export function useChatHistory(chatId: string | undefined) {
         const res = await client.get(`/api/chat/${chatId}`);
         const entries = res.data.messages as ChatEntry[];
 
-        /* ---- แปลง history เป็น Message[] ---- */
         const msgs: Message[] = entries.flatMap((e) => [
           { id: `${e.id}-q`, role: 'user', text: e.question },
           { id: e.id, role: 'bot', text: e.answer, source: e.source },
@@ -41,7 +37,6 @@ export function useChatHistory(chatId: string | undefined) {
         setChatId(chatId);
         setMessages(msgs);
 
-        /* ---- เพิ่ม session เข้าไปใน list (ถ้ายังไม่มี) ---- */
         if (entries.length > 0) {
           const isSessionExisting = sessions.some((s) => s.chat_id === chatId);
 
@@ -55,7 +50,6 @@ export function useChatHistory(chatId: string | undefined) {
           }
         }
       } catch {
-        /* chat ไม่เจอ → กลับหน้าแรก */
         navigate('/');
       }
     };

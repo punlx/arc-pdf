@@ -1,5 +1,3 @@
-// src/stores/filesStore.ts
-
 import { create } from 'zustand';
 import { deduplicateByKey } from '@/lib/utils';
 
@@ -24,13 +22,9 @@ const dedupFiles = (files: UploadFileMeta[]) =>
 export const useFilesStore = create<FilesState>((set) => ({
   files: [],
 
-  setFiles: (
-    fs // แทนที่ทั้งก้อน
-  ) => set({ files: dedupFiles(fs) }),
+  setFiles: (fs) => set({ files: dedupFiles(fs) }),
 
-  addMany: (
-    fs // เติมเข้า list เดิม
-  ) => set((s) => ({ files: dedupFiles([...s.files, ...fs]) })),
+  addMany: (fs) => set((s) => ({ files: dedupFiles([...s.files, ...fs]) })),
 
   deleteById: (id) => set((s) => ({ files: s.files.filter((f) => f.id !== id) })),
 

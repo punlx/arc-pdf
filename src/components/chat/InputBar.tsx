@@ -1,5 +1,3 @@
-// src/components/chat/InputBar.tsx
-
 import { type FormEvent, useState } from 'react';
 import { SendHorizonal, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';

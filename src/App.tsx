@@ -1,4 +1,3 @@
-// src/App.tsx
 import { Routes, Route } from 'react-router-dom';
 
 import { AppShell } from '@/components/layout/AppShell';

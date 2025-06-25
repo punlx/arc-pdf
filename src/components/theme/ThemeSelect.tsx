@@ -1,5 +1,3 @@
-// src\components\theme\ThemeSelect.tsx
-
 import {
   Select,
   SelectContent,

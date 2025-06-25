@@ -1,10 +1,7 @@
-// src/hooks/__test__/useChatSubmit.test.tsx
-
 import { renderHook, act } from '@testing-library/react';
 import { useChatSubmit } from '../useChatSubmit';
 import { MemoryRouter } from 'react-router-dom';
 
-// --- 1. Mock Dependencies ---
 import { useChatStore, type ChatState } from '@/stores/chatStore';
 import { useConfigStore, type ConfigState } from '@/stores/configStore';
 import { useFilesStore, type FilesState } from '@/stores/filesStore';
@@ -102,8 +99,6 @@ describe('useChatSubmit', () => {
     vi.mocked(uuid).mockReturnValue('temp-user-id');
   });
 
-  // ... (Test cases for guards and REST path - no changes needed)
-
   describe('WebSocket Path (useStream: true)', () => {
     beforeEach(() => {
       vi.mocked(useConfigStore).mockImplementation((selector: (state: ConfigState) => any) =>
@@ -120,7 +115,6 @@ describe('useChatSubmit', () => {
 
       const callbacks = vi.mocked(sendChatWS).mock.calls[0][1] as WsChatCallbacks;
 
-      // 🔄 แก้ไข: เพิ่ม property 'type' ให้กับ object
       const completePayload: WSChunk = {
         type: 'complete',
         id: 'ws-id-1',

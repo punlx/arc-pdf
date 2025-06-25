@@ -1,5 +1,3 @@
-// src\components\chat\ChatWindow.tsx
-
 import { useRef, useEffect } from 'react';
 import { useChatStore } from '@/stores/chatStore';
 import { MessageBubble } from './MessageBubble';
@@ -10,7 +8,6 @@ export const ChatWindow = () => {
   const messages = useChatStore((s) => s.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  /* auto-scroll */
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
