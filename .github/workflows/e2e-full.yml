@@ -1,0 +1,51 @@
+# .github/workflows/e2e-full.yml
+name: E2E - Full
+
+# 2 ทางเข้า: (A) ถูก workflow_run เรียกเมื่อ Smoke ผ่าน / (B) เมื่อ push main
+on:
+  workflow_run:
+    workflows: ['E2E - Smoke'] # ต้องพิมพ์ตรงกับ name ด้านบน
+    types: [completed]
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * *' # (optional) nightly 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  full:
+    if: |
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+      || github.event_name != 'workflow_run'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit] # ตัวอย่าง cross-browser
+
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run full E2E suite (⇢ HTML report)
+        run: npx playwright test --project=${{ matrix.browser }}
+
+      - name: Upload HTML report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser }}

@@ -1,16 +1,10 @@
-// src/api/client.ts
-
 import axios from 'axios';
 
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000',
   timeout: 10_000,
-  // เราจะลบ default header ออกไปจากตรงนี้
-  // เพื่อให้ axios สามารถกำหนด Content-Type ที่เหมาะสมให้โดยอัตโนมัติ
-  // สำหรับ JSON request และ File upload request
 });
 
-// ----- response / error interceptor (ใช้เวอร์ชันล่าสุดที่แก้ไขไปแล้ว) -----
 client.interceptors.response.use(
   (r) => r,
   (err) => {

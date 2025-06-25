@@ -16,7 +16,12 @@
     "build-storybook": "storybook build",
     "test:sb": "vitest run --project=storybook --silent",
     "test:ui": "vitest --ui --project=storybook",
-    "chromatic": "npx chromatic --project-token=chpt_a91e2edff3d70a0"
+    "test:e2e": "playwright test --reporter=line",
+    "test:e2e:debug": "playwright test --ui",
+    "e2e": "playwright test",
+    "e2e:smoke": "playwright test --grep @smoke",
+    "e2e:debug": "playwright test --headed --debug",
+    "e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
@@ -46,6 +51,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.1",
     "@eslint/js": "^9.25.0",
+    "@playwright/test": "^1.53.1",
     "@storybook/addon-a11y": "9.0.13",
     "@storybook/addon-docs": "9.0.13",
     "@storybook/addon-essentials": "^9.0.0-alpha.12",
@@ -73,6 +79,7 @@
     "eslint-plugin-storybook": "9.0.13",
     "globals": "^16.0.0",
     "jsdom": "^26.1.0",
+    "msw": "^2.10.2",
     "playwright": "^1.53.1",
     "storybook": "9.0.13",
     "tailwindcss": "^4.1.10",

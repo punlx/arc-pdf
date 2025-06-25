@@ -1,5 +1,3 @@
-// src\components\MemoryBadge.tsx
-
 import { useChatStore } from '@/stores/chatStore';
 import { Badge } from '@/components/ui/badge';
 import { Database } from 'lucide-react';

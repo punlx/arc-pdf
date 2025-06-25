@@ -1,4 +1,3 @@
-// src/api/reset.ts 
 import { client } from './client';
 import { z } from 'zod';
 
@@ -12,7 +11,6 @@ const resetResSchema = z.object({
 });
 export type ResetResponse = z.infer<typeof resetResSchema>;
 
-/** รีเซ็ตเซสชันปัจจุบัน หรือส่ง {chat_id} เพื่อลบเฉพาะแชต */
 export async function resetSession(body: ResetRequest = {}) {
   resetReqSchema.parse(body); // validate
   const res = await client.post('/api/reset', body);

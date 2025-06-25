@@ -1,4 +1,3 @@
-// src/hooks/usePdfUploader.ts
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';

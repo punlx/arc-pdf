@@ -1,4 +1,3 @@
-// src/components/ThemeToggle.tsx
 import { useTheme } from 'next-themes';
 import {
   DropdownMenu,

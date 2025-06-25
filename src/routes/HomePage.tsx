@@ -1,5 +1,3 @@
-// src/routes/HomePage.tsx
-
 import UploadPDF from '@/assets/upload_pdf.png';
 import { Loader2 } from 'lucide-react';
 import { usePdfUploader } from '@/hooks/usePdfUploader';
@@ -9,7 +7,6 @@ import { useTypingEffect } from '@/hooks/useTypingEffect'; // 🆕 Import hook
 const UPLOAD_TEXT = 'Let’s Upload your PDF...';
 
 export const HomePage = () => {
-  // 🚀 ใช้ hook เพื่อจัดการ animation อย่างสวยงาม
   const displayedText = useTypingEffect(UPLOAD_TEXT, 100, 7000);
 
   const { uploadPdfFiles, loading } = usePdfUploader();

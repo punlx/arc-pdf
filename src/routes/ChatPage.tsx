@@ -1,17 +1,14 @@
-// src/routes/ChatPage.tsx
 
 import { ChatWindow } from '@/components/chat/ChatWindow';
 import { InputBar } from '@/components/chat/InputBar';
 import { useParams } from 'react-router-dom';
 
 import { useFilesSync } from '@/hooks/useFilesSync';
-// import { useSessionsSync } from '@/hooks/useSessionsSync'; // 🗑️ ลบ import นี้ออก
 import { useChatHistory } from '@/hooks/useChatHistory';
 
 export const ChatPage = () => {
   const { chatId } = useParams<{ chatId?: string }>();
 
-  // 🗑️ ลบการเรียกใช้ useSessionsSync() ออกจากตรงนี้
   useFilesSync(chatId || null);
   useChatHistory(chatId);
 

@@ -1,5 +1,3 @@
-// src/components/layout/Header.tsx
-
 import { useLocation } from 'react-router-dom';
 import { useSidebar } from '../../ui/sidebar';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
@@ -19,13 +17,7 @@ export const Header = () => {
       <div className="text-xl font-medium">ArcPDF</div>
 
       <div className="flex items-center gap-4">
-        {location.pathname === '/' ? (
-          // Actions สำหรับหน้า Home
-          <ThemeToggle />
-        ) : (
-          // Actions สำหรับหน้า Chat
-          <ChatPageHeaderActions />
-        )}
+        {location.pathname === '/' ? <ThemeToggle /> : <ChatPageHeaderActions />}
       </div>
     </header>
   );

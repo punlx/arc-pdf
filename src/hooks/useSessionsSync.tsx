@@ -1,5 +1,3 @@
-// src\hooks\useSessionsSync.tsx
-
 import { useEffect } from 'react';
 
 import { client } from '@/api/client';
@@ -13,9 +11,7 @@ export function useSessionsSync() {
       try {
         const res = await client.get('/api/chat');
         setSessions(res.data.chats);
-      } catch {
-        /* network error → เงียบไปก่อน */
-      }
+      } catch {}
     })();
   }, [setSessions]);
 }

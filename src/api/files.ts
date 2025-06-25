@@ -1,4 +1,3 @@
-// src/api/files.ts
 import { client } from './client';
 
 export async function deleteFile(chatId: string, id: string) {

@@ -1,5 +1,3 @@
-// src/components/layout/StreamModeToggle.tsx
-
 import { Switch } from '@/components/ui/switch';
 import { useConfigStore } from '@/stores/configStore';
 
