@@ -20,33 +20,42 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # ใช้ 20 ตามเดิม (ถ้าอยากเทสต์หลายเวอร์ชันใช้ matrix)
+          node-version: 20
           cache: yarn
           cache-dependency-path: yarn.lock
 
       # ───────────── 3) Install deps ─────────────
-      - run: yarn install --frozen-lockfile
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
-      # # ───────────── 4) Lint (optional แต่แนะนำ) ─────────────
-      # - run: yarn lint
+      # ───────────── 4) Lint (optional) ─────────────
+      # - name: Lint
+      #   run: yarn lint
 
       # ───────────── 5) Unit / Component tests ─────────────
-      - run: yarn test # vitest project หลัก
+      - name: Unit tests (Vitest)
+        run: yarn test # vitest --project=unit
 
-      # ───────────── 6) Storybook Interaction tests ─────────────
+      # ───────────── 6) Install Playwright browsers ─────────────
+      - name: Install Playwright browsers
+        run: yarn playwright install --with-deps
+
+      # ───────────── 7) Storybook interaction tests ─────────────
       - name: Storybook interaction tests
-        run: yarn test:sb # vitest --project=storybook
+        run: yarn test:storybook # vitest --project=storybook
 
-      # ───────────── 7) Build production bundle (Vite + TSC) ─────────────
-      - run: yarn build
+      # ───────────── 8) Build production bundle (Vite + TSC) ─────────────
+      - name: Build production bundle
+        run: yarn build
 
-      # ───────────── 8) Build static Storybook (จับ production break) ─────────────
-      - run: yarn build-storybook --quiet
+      # ───────────── 9) Build static Storybook (จับ production break) ─────────────
+      - name: Build static Storybook
+        run: yarn build-storybook --quiet
 
-      # ───────────── 9) Ensure Dockerfile.prod builds ─────────────
+      # ───────────── 10) Ensure Dockerfile.prod builds ─────────────
       - name: Docker build (no push)
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile.prod
-          push: false # ไม่ push image แค่ตรวจ build ผ่าน
+          push: false
