@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       # 1️⃣ Clone repo
@@ -37,10 +37,7 @@ jobs:
 
       # 6️⃣ Install Playwright browsers (cached)
       - name: Install Playwright browsers
-        uses: microsoft/playwright-github-action@v1
-        with:
-          # installs browsers & re-uses cache between runs
-          install-deps: true
+        run: npx playwright install --with-deps # บน 22.04 ใช้ได้
 
       # 7️⃣ Storybook interaction tests (Vitest project=storybook)
       - name: Run Storybook interaction tests
