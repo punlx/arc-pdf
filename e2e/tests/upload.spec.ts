@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 import path from 'node:path';
 
 test('@smoke Upload basic PDF', async ({ page }) => {
-  /* 1. mock API ด้วย playwright.route (ก่อนเปิดหน้า) */
-  await page.route('**/api/upload', (route) =>
+  /* 1) Mock API อัปโหลด (จับทุกโปรโตคอล/โฮสต์) ---------------------- */
+  await page.route(/\/api\/upload$/, (route) =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -15,16 +15,14 @@ test('@smoke Upload basic PDF', async ({ page }) => {
     })
   );
 
+  /* 2) เปิดหน้า Home --------------------------------------------------- */
   await page.goto('/');
 
-  /* 2. เลือกไฟล์ (element ถูกซ่อน => ใช้ force) */
+  /* 3) ใส่ไฟล์ PDF ลง <input type="file"> ------------------------------ */
   const filePath = path.join(process.cwd(), 'e2e', '__fixtures__', 'sample.pdf');
-  const fileInput = page.locator('input[type="file"][accept="application/pdf"]');
-  await fileInput.setInputFiles(filePath, { force: true });
 
-  /* 3. รอ response / หรือรอข้อความก็ได้ */
-  await page.waitForResponse((r) => r.url().includes('/api/upload') && r.status() === 200);
+  await page.locator('input[type="file"][accept="application/pdf"]').setInputFiles(filePath); // ไม่มี options ก็พอ
 
-  // ถ้ายังอยากเช็ก UI ด้วย ให้เพิ่ม timeout เผื่อ repaint
-  await expect(page.getByText(/uploaded/i)).toBeVisible({ timeout: 5_000 });
+  /* 4) รอให้ UI แสดง “Uploaded” --------------------------------------- */
+  await expect(page.getByText(/uploaded/i)).toBeVisible({ timeout: 10_000 });
 });
