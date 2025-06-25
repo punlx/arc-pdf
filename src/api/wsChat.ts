@@ -18,7 +18,7 @@ type SendParams = {
 };
 
 // ✅ Step 1: อ่าน base URL จาก env
-const API_BASE_URL = `https://arc-pdf-backend.onrender.com`;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 
 // ✅ Step 2: แปลง http → ws / https → wss แบบปลอดภัย
 const WS_URL = API_BASE_URL.replace(/^http/, 'ws') + '/api/ws/chat';
