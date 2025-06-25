@@ -8,10 +8,9 @@ const __dirname = path.dirname(__filename);
 const PDF_SAMPLE = path.resolve(__dirname, '../__fixtures__/sample.pdf');
 
 test.describe('Smoke Test: File Upload Flow', () => {
-
   test('@smoke Upload basic PDF', async ({ page }) => {
     // --- Mocking APIs ---
-    await page.route('**/api/chat/create', async route => {
+    await page.route('**/api/chat/create', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -19,13 +18,15 @@ test.describe('Smoke Test: File Upload Flow', () => {
       });
     });
 
-    await page.route('**/api/upload?chat_id=*', async route => {
+    await page.route('**/api/upload?chat_id=*', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
           message: 'Uploaded via Playwright Route',
-          files: [{ id: '1', filename: 'sample.pdf', size: 1234, upload_time: new Date().toISOString() }],
+          files: [
+            { id: '1', filename: 'sample.pdf', size: 1234, upload_time: new Date().toISOString() },
+          ],
         }),
       });
     });
@@ -34,11 +35,11 @@ test.describe('Smoke Test: File Upload Flow', () => {
 
     await page.goto('/');
     await expect(page.locator('img[alt="upload pdf image"]')).toBeVisible();
-    
+
     // 1. ทำการอัปโหลดไฟล์
     const fileInput = page.locator('input[type="file"]');
     await fileInput.setInputFiles(PDF_SAMPLE);
-    
+
     // 2. ⭐️ รอให้ URL เปลี่ยนไปยังหน้า Chat ก่อนเป็นอันดับแรก ⭐️
     // นี่คือการยืนยันที่แน่นอนที่สุดว่าการ Navigate ได้เกิดขึ้นแล้ว
     await page.waitForURL('**/ci-mock-chat-id-from-route');
