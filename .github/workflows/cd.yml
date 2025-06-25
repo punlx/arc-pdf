@@ -1,10 +1,10 @@
-name: Frontend CI # Build, Unit-test & Interaction-test
+name: Frontend CI
 
 on:
   push:
-    branches: [main] # รันบน main ทุก push
-    paths: ['**'] # repo นี้มีแต่ FE
-  pull_request: # รันบนทุก PR
+    branches: [main]
+    paths: ['**']
+  pull_request:
     paths: ['**']
   workflow_dispatch:
 
@@ -13,49 +13,59 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ───────────── 1) Clone repo ─────────────
+      # 1️⃣ Clone repo
       - uses: actions/checkout@v4
 
-      # ───────────── 2) Setup Node & cache ─────────────
-      - name: Setup Node
+      # 2️⃣ Setup Node + cache Yarn
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
           cache-dependency-path: yarn.lock
 
-      # ───────────── 3) Install deps ─────────────
+      # 3️⃣ Install deps
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # ───────────── 4) Lint (optional) ─────────────
-      # - name: Lint
-      #   run: yarn lint
+      # 4️⃣ (optional) Lint
+      # - run: yarn lint
 
-      # ───────────── 5) Unit / Component tests ─────────────
-      - name: Unit tests (Vitest)
-        run: yarn test # vitest --project=unit
+      # 5️⃣ Unit / component tests (Vitest project=unit)
+      - name: Run unit tests
+        run: yarn test
 
-      # ───────────── 6) Install Playwright browsers ─────────────
+      # 6️⃣ Install Playwright browsers (cached)
       - name: Install Playwright browsers
-        run: yarn playwright install --with-deps
+        uses: microsoft/playwright-github-action@v1
+        with:
+          # installs browsers & re-uses cache between runs
+          install-deps: true
 
-      # ───────────── 7) Storybook interaction tests ─────────────
-      - name: Storybook interaction tests
-        run: yarn test:storybook # vitest --project=storybook
+      # 7️⃣ Storybook interaction tests (Vitest project=storybook)
+      - name: Run Storybook interaction tests
+        run: yarn test:storybook
 
-      # ───────────── 8) Build production bundle (Vite + TSC) ─────────────
+      # 8️⃣ Build production bundle (Vite + TSC)
       - name: Build production bundle
         run: yarn build
 
-      # ───────────── 9) Build static Storybook (จับ production break) ─────────────
+      # 9️⃣ Build static Storybook
       - name: Build static Storybook
         run: yarn build-storybook --quiet
 
-      # ───────────── 10) Ensure Dockerfile.prod builds ─────────────
+      # 🔟 Ensure Dockerfile.prod builds
       - name: Docker build (no push)
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile.prod
           push: false
+
+      # (optional) Upload coverage report
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage
