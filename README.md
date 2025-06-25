@@ -91,13 +91,12 @@ src/
 
 ---
 
-## 4. Optional Loom Walk‑through
+## 4. Loom Walk‑through
 
-> _แนะนำ_ อัดวิดีโอ 3–5 นาทีครอบคลุม:
+> Youtube Link (IN Process)
 >
 > 1. Upload → Chat demo (REST & WS)
 > 2. VS Code code‑tour (components/hooks/stores)
-> 3. เปิด Sentry dashboard แสดง error capture
-> 4. CI pipeline badge บน GitHub README
+> 3. CI pipeline
 
 ---
