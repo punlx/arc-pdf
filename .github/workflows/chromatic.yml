@@ -1,0 +1,14 @@
+name: 'Chromatic'
+on: [push, pull_request]
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2 # หรือ setup-node
+        with: { version: 9 }
+      - run: pnpm install
+      - uses: chromaui/action@v1
+        with:
+          token: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
