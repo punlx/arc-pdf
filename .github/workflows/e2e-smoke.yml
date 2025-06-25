@@ -1,9 +1,8 @@
 # .github/workflows/e2e-smoke.yml
-name: E2E - Smoke
-
+name: E2E • Smoke
 on:
   pull_request:
-    branches: [main] # ✅ เฉพาะ PR → main
+    branches: [main]
     paths:
       - 'src/**'
       - 'e2e/**'
@@ -12,37 +11,27 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 15 # ขยายเวลานิดหน่อย เผื่อเครื่อง CI ช้า
+    timeout-minutes: 15
 
     steps:
-      # ───────────────────── 1. Checkout ─────────────────────
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # ให้ Playwright เห็น git history เต็ม ๆ
+        with: { fetch-depth: 0 }
 
-      # ───────────────────── 2. Node + cache ─────────────────
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
           cache-dependency-path: yarn.lock
 
-      # ───────────────────── 3. Install deps ─────────────────
       - run: yarn install --frozen-lockfile
+      - run: yarn build # 👉 ต้อง build ก่อน webServer
 
-      # ───────────────────── 4. Build FE ─────────────────────
-      #   ต้อง build ก่อนเพื่อให้ `yarn preview` คล้าย prod
-      - run: yarn build # vite build + tsc
-
-      # ───────────────────── 5. Install browsers ─────────────
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      # ───────────────────── 6. Smoke tests ──────────────────
       - name: Run smoke tests
-        run: yarn e2e:smoke # หรือ `npx playwright test --grep @smoke`
+        run: yarn e2e:smoke # = playwright test --grep @smoke
 
-      # ───────────────────── 7. เก็บหลักฐานถ้าล้ม ───────────
       - name: Upload Playwright artifacts
         if: failure()
         uses: actions/upload-artifact@v4

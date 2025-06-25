@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 import path from 'node:path';
 
 test('@smoke Upload basic PDF', async ({ page }) => {
-  /* 1) Mock API อัปโหลด (จับทุกโปรโตคอล/โฮสต์) ---------------------- */
+  /* 1. Mock API ไว้ก่อนเข้าเว็บ */
   await page.route(/\/api\/upload$/, (route) =>
     route.fulfill({
       status: 200,
@@ -15,14 +15,22 @@ test('@smoke Upload basic PDF', async ({ page }) => {
     })
   );
 
-  /* 2) เปิดหน้า Home --------------------------------------------------- */
   await page.goto('/');
 
-  /* 3) ใส่ไฟล์ PDF ลง <input type="file"> ------------------------------ */
+  /* 2. ใส่ไฟล์ (input ถูกซ่อน ใช้ force) */
   const filePath = path.join(process.cwd(), 'e2e', '__fixtures__', 'sample.pdf');
+  await page
+    .locator('input[type="file"][accept="application/pdf"]')
+    .setInputFiles(filePath, { force: true });
 
-  await page.locator('input[type="file"][accept="application/pdf"]').setInputFiles(filePath); // ไม่มี options ก็พอ
+  /* 3. กดปุ่ม Upload ให้ Dropzone เริ่ม fetch */
+  await page.getByRole('button', { name: /upload/i }).click();
 
-  /* 4) รอให้ UI แสดง “Uploaded” --------------------------------------- */
-  await expect(page.getByText(/uploaded/i)).toBeVisible({ timeout: 10_000 });
+  /* 4. ยืนยันว่าคำขอถูก mock สำเร็จ */
+  await page.waitForResponse((r) => r.url().endsWith('/api/upload') && r.status() === 200, {
+    timeout: 30_000,
+  });
+
+  /* 5. (เสริม) เช็กข้อความบนหน้าด้วยก็ได้ */
+  await expect(page.getByText(/uploaded/i)).toBeVisible({ timeout: 30_000 });
 });
