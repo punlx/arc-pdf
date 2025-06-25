@@ -1,0 +1,9 @@
+// tsconfig.storybook.json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["vite/client", "storybook__react"],
+    "jsx": "react-jsx"
+  },
+  "include": [".storybook/**/*", "src/**/*.stories.tsx", "src/**/*.mdx"]
+}
