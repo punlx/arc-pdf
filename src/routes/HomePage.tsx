@@ -19,6 +19,7 @@ export const HomePage = () => {
     accept: { 'application/pdf': [] },
     multiple: true,
   });
+  console.log('HomePage.tsx:21 |test| : ');
 
   return (
     <div className="flex items-center justify-center h-full flex-col gap-4">
