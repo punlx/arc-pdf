@@ -3,10 +3,9 @@ name: E2E - Smoke
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-    branches: [main] # 👉 base branch = main
+    branches: [main]
     paths:
-      - 'src/components/ui/**'
+      - 'src/**'
       - 'e2e/**'
   workflow_dispatch:
 
@@ -17,7 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0 # ให้ Playwright เห็น commit history เผื่อ trace
 
       - uses: actions/setup-node@v4
         with:
@@ -27,8 +27,8 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - name: Install Playwright browsers (chromium only)
-        run: npx playwright install --with-deps chromium
+      # ดาวน์โหลด Chrome-headless ที่ Playwright ใช้
+      - run: npx playwright install --with-deps chromium
 
-      - name: Run smoke tests
-        run: npx playwright test --project=chromium --grep @smoke
+      # 👉 รันเฉพาะ smoke tag
+      - run: yarn e2e:smoke
