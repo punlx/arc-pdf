@@ -16,6 +16,7 @@ export default defineConfig({
   // สตาร์ต server (production-like) ก่อนเทสต์
   webServer: {
     command: 'yarn preview --port 4173',
+    url: 'http://localhost:4173',
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
   },
@@ -26,5 +27,5 @@ export default defineConfig({
 
   //  คอนฟิก CI
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  workers: process.env.CI ? 1 : undefined,
 });
