@@ -9,8 +9,7 @@ The repository now ships with **Storybook**, **Chromatic visual tests**, and **
 
 ```bash
 # 1. clone + cd
-$ git clone https://github.com/<you>/arc-pdf.git
-$ cd arc-pdf
+$ git clone https://github.com/punlx/arc-pdf.git
 
 # 2. start everything
 $ docker compose up --build
