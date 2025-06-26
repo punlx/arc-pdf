@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 
 import { uploadFiles } from '@/api/upload';
 import { client } from '@/api/client';
@@ -8,6 +9,12 @@ import { useFilesStore } from '@/stores/filesStore';
 import { useChatStore } from '@/stores/chatStore';
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+
+const createChatResSchema = z.object({
+  chat_id: z.string().uuid(),
+  message: z.string(),
+});
+type CreateChatParsed = z.infer<typeof createChatResSchema>;
 
 export function usePdfUploader() {
   const [loading, setLoading] = useState(false);
@@ -46,7 +53,8 @@ export function usePdfUploader() {
       if (!targetId) {
         try {
           const res = await client.post('/api/chat/create');
-          targetId = res.data.chat_id as string;
+          const parsed: CreateChatParsed = createChatResSchema.parse(res.data); // ✅ validate
+          targetId = parsed.chat_id;
           setChatId(targetId);
           navigate(`/${targetId}`);
         } catch (e: any) {
