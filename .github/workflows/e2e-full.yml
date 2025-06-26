@@ -10,8 +10,6 @@ on:
 
 jobs:
   full:
-    # ทำต่อเมื่อเป็น workflow_run ที่ conclusion == success
-    # หรือเป็น trigger แบบอื่น (schedule / dispatch)
     if: |
       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
       || github.event_name != 'workflow_run'
@@ -19,16 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
-
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || '' }}
 
       - uses: actions/setup-node@v4
         with:
@@ -42,12 +34,12 @@ jobs:
       - name: Install Playwright browsers (all)
         run: npx playwright install --with-deps
 
-      - name: Run full E2E suite (@full only)
-        run: npx playwright test --grep @full --project=${{ matrix.browser }}
+      - name: Run full E2E suite
+        run: npx playwright test --grep @full
 
       - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.browser }}
+          name: playwright-report
           path: playwright-report
