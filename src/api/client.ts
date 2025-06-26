@@ -1,13 +1,20 @@
 import axios from 'axios';
+import * as Sentry from '@sentry/react'; // ── Sentry
 
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000',
   timeout: 10_000,
 });
 
+/* ────────────────────────────────────────────────────────────
+   Response / Error interceptor
+   ──────────────────────────────────────────────────────────── */
 client.interceptors.response.use(
   (r) => r,
   (err) => {
+    /* ▸ ส่งเข้า Sentry ก่อนแปลงเป็น Error ปกติ */
+    Sentry.captureException(err); // ── Sentry
+
     let errorMsg = 'An unknown error occurred';
 
     if (axios.isAxiosError(err) && err.response) {

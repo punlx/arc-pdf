@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import * as Sentry from '@sentry/react'; // ── Sentry
 
 export interface Message {
   id: string;
@@ -17,7 +18,7 @@ export interface ChatState {
 
   addMessage: (m: Message) => void;
   updateMessage: (id: string, patch: Patch) => void;
-  setMessages: (ms: Message[]) => void; // 🆕
+  setMessages: (ms: Message[]) => void;
   setChatId: (id: string | null) => void;
   setMemory: (f: boolean) => void;
   setSending: (v: boolean) => void;
@@ -30,7 +31,10 @@ export const useChatStore = create<ChatState>((set) => ({
   hasMemory: false,
   sending: false,
 
-  addMessage: (m) => set((s) => ({ messages: [...s.messages, m] })),
+  addMessage: (m) =>
+    set((s) => ({
+      messages: [...s.messages, m],
+    })),
 
   updateMessage: (id, patch) =>
     set((s) => ({
@@ -41,17 +45,31 @@ export const useChatStore = create<ChatState>((set) => ({
       }),
     })),
 
-  setMessages: (ms) => set({ messages: ms }), // 🆕
+  setMessages: (ms) => set({ messages: ms }),
 
-  setChatId: (id) => set({ chatId: id }),
+  /* ───────────── setChatId พร้อม Sentry context ───────────── */
+  setChatId: (id) => {
+    /* แสดงใน Issue context เพื่อค้นหาเจอง่าย */
+    if (id) {
+      Sentry.setContext('chat', { chat_id: id }); // ── Sentry
+    } else {
+      Sentry.setContext('chat', null); // clear เมื่อ reset
+    }
+    set({ chatId: id });
+  },
+
   setMemory: (f) => set({ hasMemory: f }),
   setSending: (v) => set({ sending: v }),
 
   reset: () =>
-    set({
-      chatId: null,
-      messages: [],
-      hasMemory: false,
-      sending: false,
+    set(() => {
+      /* ล้าง context เมื่อผู้ใช้ reset */
+      Sentry.setContext('chat', null); // ── Sentry
+      return {
+        chatId: null,
+        messages: [],
+        hasMemory: false,
+        sending: false,
+      };
     }),
 }));
