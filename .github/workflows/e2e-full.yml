@@ -1,17 +1,16 @@
 # .github/workflows/e2e-full.yml
 name: E2E - Full
 
-# 2 ทางเข้า: (A) ถูก workflow_run เรียกเมื่อ Smoke ผ่าน / (B) เมื่อ push main
 on:
   workflow_run:
-    workflows: ['E2E - Smoke'] # ต้องพิมพ์ตรงกับ name ด้านบน
+    workflows: ['E2E - Smoke'] # เริ่มรันต่อเมื่อ Smoke ผ่าน
     types: [completed]
     branches: [main]
   push:
-    branches: [main]
+    branches: [main] # push เข้า main ก็รัน
   schedule:
-    - cron: '0 3 * * *' # (optional) nightly 03:00 UTC
-  workflow_dispatch:
+    - cron: '0 3 * * *' # nightly 03:00 UTC (10:00 ICT)
+  workflow_dispatch: # กดรันเองได้
 
 jobs:
   full:
@@ -24,28 +23,37 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox, webkit] # ตัวอย่าง cross-browser
+        browser: [chromium, firefox, webkit] # เหมือนเดิม
 
     steps:
+      # 1) Checkout
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0
 
+      # 2) Node + Yarn cache
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
           cache-dependency-path: yarn.lock
 
+      # 3) Install & Build (เหมือน smoke)
       - run: yarn install --frozen-lockfile
+      - run: yarn build # ต้อง build ก่อน webServer
 
-      - name: Install Playwright browsers
+      # 4) ติดตั้ง browser ทั้งหมด
+      - name: Install Playwright browsers (all)
         run: npx playwright install --with-deps
 
-      - name: Run full E2E suite (⇢ HTML report)
-        run: npx playwright test --project=${{ matrix.browser }}
+      # 5) รันเฉพาะเทสต์ @full ใน browser ตาม matrix
+      - name: Run full E2E suite (@full only)
+        run: npx playwright test --grep @full --project=${{ matrix.browser }}
 
-      - name: Upload HTML report artifact
+      # 6) อัปโหลดรีพอร์ตเสมอ
+      - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ matrix.browser }}
+          path: playwright-report
