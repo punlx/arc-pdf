@@ -16,7 +16,7 @@ const PDF_SAMPLE7 = path.resolve(__dirname, '../__fixtures__/sample7.pdf');
 const PDF_SAMPLE8 = path.resolve(__dirname, '../__fixtures__/sample8.pdf');
 const PDF_SAMPLE9 = path.resolve(__dirname, '../__fixtures__/sample9.pdf');
 
-test.describe('Smoke Test: File Upload Flow', () => {
+test.describe('E2E Smoke Test: File Upload Flow', () => {
   test('@smoke Upload basic PDF', async ({ page }) => {
     const chatId = uuidv4();
 
@@ -74,8 +74,10 @@ test.describe('Smoke Test: File Upload Flow', () => {
 
     await expect(page).toHaveURL(`/${chatId}`);
   });
+});
 
-  test('@smoke Upload multiple PDFs', async ({ page }) => {
+test.describe('E2E: PDF Upload Flow', () => {
+  test('@full Upload multiple PDFs', async ({ page }) => {
     const chatId = uuidv4();
 
     await page.route('**/api/chat/create', async (route) => {
@@ -138,7 +140,7 @@ test.describe('Smoke Test: File Upload Flow', () => {
     await expect(page).toHaveURL(`/${chatId}`);
   });
 
-  test('@smoke Upload 9 PDFs and display count PDFs', async ({ page }) => {
+  test('@full smoke Upload 9 PDFs and display count PDFs', async ({ page }) => {
     const chatId = uuidv4();
 
     const uploadedFiles = [
