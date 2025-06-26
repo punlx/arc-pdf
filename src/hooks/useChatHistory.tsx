@@ -3,15 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { client } from '@/api/client';
 import { useChatStore, type Message } from '@/stores/chatStore';
 import { useSessionsStore } from '@/stores/sessionsStore';
+import { chatHistoryResSchema } from '@/api/schemas'; // 👈 Import schema
+import { z } from 'zod';
 
-interface ChatEntry {
-  id: string;
-  question: string;
-  answer: string;
-  source: string;
-  timestamp: string;
-  chat_id: string;
-}
+type ChatEntry = z.infer<typeof chatHistoryResSchema.shape.messages.element>;
 
 export function useChatHistory(chatId: string | undefined) {
   const navigate = useNavigate();
@@ -27,7 +22,8 @@ export function useChatHistory(chatId: string | undefined) {
     const fetchHistory = async () => {
       try {
         const res = await client.get(`/api/chat/${chatId}`);
-        const entries = res.data.messages as ChatEntry[];
+        const validatedData = chatHistoryResSchema.parse(res.data);
+        const entries = validatedData.messages as ChatEntry[];
 
         const msgs: Message[] = entries.flatMap((e) => [
           { id: `${e.id}-q`, role: 'user', text: e.question },
@@ -49,7 +45,8 @@ export function useChatHistory(chatId: string | undefined) {
             });
           }
         }
-      } catch {
+      } catch (err) {
+        console.error(`Failed to fetch/validate history for chat ${chatId}:`, err);
         navigate('/');
       }
     };

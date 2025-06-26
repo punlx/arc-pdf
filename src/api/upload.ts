@@ -1,7 +1,10 @@
-import type { UploadFileMeta } from '@/stores/filesStore';
 import { client } from './client';
+import { uploadResSchema } from './schemas'; // 👈 Import schema
+import { z } from 'zod';
 
-export async function uploadFiles(files: File[], chatId: string) {
+type UploadResponse = z.infer<typeof uploadResSchema>;
+
+export async function uploadFiles(files: File[], chatId: string): Promise<UploadResponse> {
   if (!chatId) throw new Error('uploadFiles: chatId is required');
 
   const form = new FormData();
@@ -9,8 +12,5 @@ export async function uploadFiles(files: File[], chatId: string) {
 
   const res = await client.post(`/api/upload?chat_id=${chatId}`, form);
 
-  return res.data as {
-    message: string;
-    files: UploadFileMeta[];
-  };
+  return uploadResSchema.parse(res.data);
 }

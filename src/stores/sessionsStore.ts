@@ -4,13 +4,12 @@ import { deduplicateByKey } from '@/lib/utils';
 export interface SessionMeta {
   chat_id: string;
   message_count: number;
-  first_question?: string;
-  last_message_time?: string;
+  first_question?: string | null;
+  last_message_time?: string | null;
 }
 
 export interface SessionsState {
   sessions: SessionMeta[];
-
   setSessions: (ss: SessionMeta[]) => void;
   addSession: (s: SessionMeta) => void;
   removeSession: (id: string) => void;
