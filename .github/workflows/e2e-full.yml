@@ -20,11 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit] # เหมือนเดิม
-
     steps:
       # 1) Checkout
       - uses: actions/checkout@v4
@@ -38,7 +33,7 @@ jobs:
           cache: yarn
           cache-dependency-path: yarn.lock
 
-      # 3) Install & Build (เหมือน smoke)
+      # 3) Install & Build
       - run: yarn install --frozen-lockfile
       - run: yarn build # ต้อง build ก่อน webServer
 
@@ -46,14 +41,13 @@ jobs:
       - name: Install Playwright browsers (all)
         run: npx playwright install --with-deps
 
-      # 5) รันเฉพาะเทสต์ @full ใน browser ตาม matrix
-      - name: Run full E2E suite (@full only)
-        run: npx playwright test --grep @full --project=${{ matrix.browser }}
+      - name: Run full E2E suite
+        run: npx playwright test --grep @full
 
       # 6) อัปโหลดรีพอร์ตเสมอ
       - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.browser }}
+          name: playwright-report
           path: playwright-report
