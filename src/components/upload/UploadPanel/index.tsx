@@ -1,4 +1,3 @@
-// src/components/upload/UploadPanel.tsx
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -27,29 +26,23 @@ interface FileMeta {
 const GAP_PX = 8; // gap-2 = 0.5rem
 
 export const UploadPanel = () => {
-  /* ---------- store ---------- */
   const files = useFilesStore((s) => s.files) as FileMeta[];
 
-  /* ---------- state ---------- */
   const [tagWidths, setTagWidths] = useState<Record<string, number>>({});
   const [visibleCount, setVisibleCount] = useState<number>(files.length);
 
-  /* ---------- refs ---------- */
   const containerRef = useRef<HTMLDivElement | null>(null);
   const badgeRef = useRef<HTMLSpanElement | null>(null);
 
-  /* ---------- helper : เก็บความกว้างแท็กหลัง mount ---------- */
   const registerTag = (id: string, el: HTMLDivElement | null) => {
     if (el && !(id in tagWidths)) {
       setTagWidths((w) => ({ ...w, [id]: el.offsetWidth }));
     }
   };
 
-  /* ---------- recalc เมื่อขนาดเปลี่ยน + วัดครบแล้ว ---------- */
   useLayoutEffect(() => {
     if (!containerRef.current) return;
 
-    // ถ้า tag ไหนยังไม่ได้วัด → แสดงทุกไฟล์ไปก่อน
     const allMeasured = files.every((f) => tagWidths[f.id]);
     if (!allMeasured) {
       setVisibleCount(files.length);
@@ -75,26 +68,21 @@ export const UploadPanel = () => {
       setVisibleCount(count);
     };
 
-    calc(); // run ครั้งแรก
+    calc();
     const ro = new ResizeObserver(calc);
     ro.observe(containerRef.current);
     return () => ro.disconnect();
   }, [files, tagWidths]);
 
-  /* ---------- derive ---------- */
   const visibleFiles = files.slice(0, visibleCount);
   const hiddenCount = Math.max(files.length - visibleCount, 0);
 
-  /* ---------- mobile ---------- */
   const isMobileScreen = useIsMobile();
 
-  /* ---------- UI ---------- */
   return (
     <div className={cn('flex items-center gap-3 w-full overflow-hidden')}>
-      {/* 1️⃣ icon อัปโหลด */}
       <DropZone />
 
-      {/* 2️⃣ container แท็ก – ให้ flex-1 เพื่อกางเต็มพื้นที่ที่เหลือ */}
       <div ref={containerRef} className="flex-1 flex items-center gap-2 overflow-hidden pr-[37px]">
         {visibleFiles.map((f) => (
           <Tooltip key={f.id}>
@@ -111,10 +99,8 @@ export const UploadPanel = () => {
         ))}
       </div>
 
-      {/* 3️⃣  +n (แสดง Popover หรือ Drawer ตามขนาดหน้าจอ) */}
       {hiddenCount > 0 &&
         (isMobileScreen ? (
-          /* ─── Drawer (mobile) ─── */
           <Sheet>
             <SheetTrigger asChild>
               <Badge
@@ -137,12 +123,10 @@ export const UploadPanel = () => {
                 <SheetClose asChild />
               </SheetHeader>
 
-              {/* body */}
               <FileList />
             </SheetContent>
           </Sheet>
         ) : (
-          /* ─── Popover (desktop / tablet) ─── */
           <Popover>
             <PopoverTrigger asChild>
               <Badge
