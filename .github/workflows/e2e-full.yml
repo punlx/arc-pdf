@@ -36,14 +36,15 @@ jobs:
           cache-dependency-path: yarn.lock
 
       - run: yarn install --frozen-lockfile
+      - run: yarn build # ต้อง build ก่อน webServer
 
-      - name: Install Playwright browsers
+      - name: Install Playwright browsers (all)
         run: npx playwright install --with-deps
 
       - name: Run full E2E suite (⇢ @full tag only)
         run: npx playwright test --grep @full --project=${{ matrix.browser }}
 
-      - name: Upload HTML report artifact
+      - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
