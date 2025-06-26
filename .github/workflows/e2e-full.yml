@@ -1,15 +1,16 @@
+# .github/workflows/e2e-full.yml
 name: E2E - Full
 
 on:
   workflow_run:
-    workflows: ['E2E - Smoke']
+    workflows: ['E2E - Smoke'] # เริ่มรันต่อเมื่อ Smoke ผ่าน
     types: [completed]
     branches: [main]
   push:
-    branches: [main]
+    branches: [main] # push เข้า main ก็รัน
   schedule:
-    - cron: '0 3 * * *'
-  workflow_dispatch:
+    - cron: '0 3 * * *' # nightly 03:00 UTC (10:00 ICT)
+  workflow_dispatch: # กดรันเองได้
 
 jobs:
   full:
@@ -22,28 +23,34 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox, webkit]
+        browser: [chromium, firefox, webkit] # เหมือนเดิม
 
     steps:
+      # 1) Checkout
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # 2) Node + Yarn cache
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
           cache-dependency-path: yarn.lock
 
+      # 3) Install & Build (เหมือน smoke)
       - run: yarn install --frozen-lockfile
       - run: yarn build # ต้อง build ก่อน webServer
 
+      # 4) ติดตั้ง browser ทั้งหมด
       - name: Install Playwright browsers (all)
         run: npx playwright install --with-deps
 
-      - name: Run full E2E suite (⇢ @full tag only)
+      # 5) รันเฉพาะเทสต์ @full ใน browser ตาม matrix
+      - name: Run full E2E suite (@full only)
         run: npx playwright test --grep @full --project=${{ matrix.browser }}
 
+      # 6) อัปโหลดรีพอร์ตเสมอ
       - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4

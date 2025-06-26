@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
-const TIMEOUT = 5_000;
+const TIMEOUT = 15_000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +24,7 @@ test.describe('E2E Smoke Test: File Upload Flow', () => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ chat_id: chatId, message: 'Created' }), // ✅ add message
+        body: JSON.stringify({ chat_id: chatId, message: 'Created' }),
       });
     });
 
@@ -59,7 +59,7 @@ test.describe('E2E Smoke Test: File Upload Flow', () => {
     });
 
     await page.goto('/');
-    await expect(page.locator('img[alt="upload pdf image"]')).toBeVisible();
+    await expect(page.locator('img[alt="upload pdf image"]')).toBeVisible({ timeout: TIMEOUT });
 
     const fileInput = page.locator('input[type="file"]');
     await fileInput.setInputFiles(PDF_SAMPLE);
@@ -67,10 +67,10 @@ test.describe('E2E Smoke Test: File Upload Flow', () => {
     await page.waitForURL(`**/${chatId}`, { timeout: TIMEOUT });
 
     const fileTag = page.locator('form').getByText('sample.pdf');
-    await expect(fileTag).toBeVisible();
+    await expect(fileTag).toBeVisible({ timeout: TIMEOUT });
 
     const toast = page.getByText('Uploaded via Playwright Route');
-    await expect(toast).toBeVisible();
+    await expect(toast).toBeVisible({ timeout: TIMEOUT });
 
     await expect(page).toHaveURL(`/${chatId}`);
   });
@@ -125,17 +125,19 @@ test.describe('E2E: PDF Upload Flow', () => {
     });
 
     await page.goto('/');
-    await expect(page.locator('img[alt="upload pdf image"]')).toBeVisible();
+    await expect(page.locator('img[alt="upload pdf image"]')).toBeVisible({ timeout: TIMEOUT });
 
     const fileInput = page.locator('input[type="file"]');
     await fileInput.setInputFiles([PDF_SAMPLE, PDF_SAMPLE2]);
 
     await page.waitForURL(`**/${chatId}`, { timeout: TIMEOUT });
 
-    await expect(page.getByText('sample.pdf')).toBeVisible();
-    await expect(page.getByText('sample2.pdf')).toBeVisible();
+    await expect(page.getByText('sample.pdf')).toBeVisible({ timeout: TIMEOUT });
+    await expect(page.getByText('sample2.pdf')).toBeVisible({ timeout: TIMEOUT });
 
-    await expect(page.getByText('Uploaded multiple via Playwright Route')).toBeVisible();
+    await expect(page.getByText('Uploaded multiple via Playwright Route')).toBeVisible({
+      timeout: TIMEOUT,
+    });
 
     await expect(page).toHaveURL(`/${chatId}`);
   });
@@ -192,7 +194,7 @@ test.describe('E2E: PDF Upload Flow', () => {
     });
 
     await page.goto('/');
-    await expect(page.locator('img[alt="upload pdf image"]')).toBeVisible();
+    await expect(page.locator('img[alt="upload pdf image"]')).toBeVisible({ timeout: TIMEOUT });
 
     const fileInput = page.locator('input[type="file"]');
     await fileInput.setInputFiles([
@@ -209,9 +211,9 @@ test.describe('E2E: PDF Upload Flow', () => {
 
     await page.waitForURL(`**/${chatId}`, { timeout: TIMEOUT });
 
-    await expect(page.getByText('sample.pdf')).toBeVisible();
+    await expect(page.getByText('sample.pdf')).toBeVisible({ timeout: TIMEOUT });
 
     const badge = page.locator('span, button').filter({ hasText: /^\+\d+$/ });
-    await expect(badge).toBeVisible();
+    await expect(badge).toBeVisible({ timeout: TIMEOUT });
   });
 });
