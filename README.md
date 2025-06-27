@@ -33,34 +33,34 @@ $ docker compose up --build
 
 > 3. Production
 
-- CI/CD Pipeline : 
+- CI/CD Pipeline : IN PROCESS
 
 ---
 
-| Works                              | Scripts                                            |
-| ---------------------------------- | -------------------------------------------------- |
-| **Dev server (Vite + HMR)**        | `yarn dev`                                         |
-| **Build โปรดักชัน**                | `yarn build`                                       |
-| **Preview ไฟล์ build**             | `yarn preview`                                     |
-| **Storybook (โหมด dev)**           | `yarn storybook`                                   |
-| **Build Storybook static**         | `yarn build-storybook`                             |
-| **Unit tests (Vitest)**            | `yarn test`                                        |
-| **Watch tests**                    | `yarn test:watch`                                  |
-| **Report coverage**                | `yarn coverage`                                    |
-| **Storybook tests (Vitest-addon)** | `yarn test:storybook`                              |
-| **UI test runner (Vitest UI)**     | `yarn test:ui`                                     |
-| **E2E – ชุดเต็ม (Playwright)**     | `yarn e2e`                                         |
-| **E2E – smoke subset**             | `yarn e2e:smoke`                                   |
-| **E2E – debug/headed mode**        | `yarn e2e:debug`                                   |
-| **แสดงรายงาน E2E ล่าสุด**          | `yarn e2e:report`                                  |
-| **Chromatic visual tests**         | `npx chromatic` (ต้องมี `CHROMATIC_PROJECT_TOKEN`) |
+| Works                              | Scripts                |
+| ---------------------------------- | ---------------------- |
+| **Dev server (Vite + HMR)**        | `yarn dev`             |
+| **Build โปรดักชัน**                | `yarn build`           |
+| **Preview ไฟล์ build**             | `yarn preview`         |
+| **Storybook (โหมด dev)**           | `yarn storybook`       |
+| **Build Storybook static**         | `yarn build-storybook` |
+| **Unit tests (Vitest)**            | `yarn test`            |
+| **Watch tests**                    | `yarn test:watch`      |
+| **Report coverage**                | `yarn coverage`        |
+| **Storybook tests (Vitest-addon)** | `yarn test:storybook`  |
+| **UI test runner (Vitest UI)**     | `yarn test:ui`         |
+| **E2E – ชุดเต็ม (Playwright)**     | `yarn e2e`             |
+| **E2E – smoke subset**             | `yarn e2e:smoke`       |
+| **E2E – Full subset**              | `yarn e2e:full`        |
+| **E2E – debug/headed mode**        | `yarn e2e:debug`       |
+| **แสดงรายงาน E2E ล่าสุด**          | `yarn e2e:report`      |
 
 ## 1. Project Structure & Component Breakdown
 
 ```txt
 src/
 ├── api/                # Axios clients + type‑safe service functions
-│   ├── chat.ts         # Q&A (REST) + Zod schemas
+│   ├── chat.ts         # Q&A (REST)
 │   ├── wsChat.ts       # Q&A (WebSocket streaming)
 │   ├── upload.ts       # PDF upload
 │   ├── files.ts        # List / delete files
