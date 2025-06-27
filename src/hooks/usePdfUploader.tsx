@@ -32,7 +32,7 @@ export function usePdfUploader() {
       const curNames = new Set(curFiles.map((f) => f.filename.toLowerCase()));
       const deduped = files.filter((f) => !curNames.has(f.name.toLowerCase()));
       if (!deduped.length) {
-        toast.warning('ไฟล์ที่เลือกมีอยู่แล้วทั้งหมด');
+        toast.warning('selected files already exist.');
         return;
       }
 
@@ -42,7 +42,7 @@ export function usePdfUploader() {
           `${oversize
             .slice(0, 3)
             .map((f) => f.name)
-            .join(', ')} เกิน 10 MB และจะไม่อัปโหลด`
+            .join(', ')} Over 10 MB and will not upload.`
         );
       }
 
@@ -58,7 +58,7 @@ export function usePdfUploader() {
           setChatId(targetId);
           navigate(`/${targetId}`);
         } catch (e: any) {
-          toast.error(e?.message ?? 'ไม่สามารถสร้าง session');
+          toast.error(e?.message ?? 'Unable to create session');
           return;
         }
       }
