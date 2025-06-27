@@ -20,13 +20,16 @@ vi.mock('@/lib/fullReset');
 vi.mock('@/components/memory/MemoryBadge', () => ({
   MemoryBadge: () => <div data-testid="memory-badge" />,
 }));
-vi.mock('@/components/theme/ThemeToggle', () => ({
+
+vi.mock('@/components/layout/Header/ThemeToggle', () => ({
   ThemeToggle: () => <div data-testid="theme-toggle" />,
 }));
-vi.mock('../Header/StreamModeToggle', () => ({
+
+vi.mock('@/components/layout/Header/ChatPageHeaderActions/StreamModeToggle', () => ({
   StreamModeToggle: () => <div data-testid="stream-mode-toggle" />,
 }));
-vi.mock('../Header/MobileSettingsSheet', () => ({
+
+vi.mock('@/components/layout/Header/ChatPageHeaderActions/MobileSettingsSheet', () => ({
   MobileSettingsSheet: () => <div data-testid="mobile-settings-sheet" />,
 }));
 
