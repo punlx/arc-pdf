@@ -26,13 +26,13 @@ export async function fullReset(chatId: string | null, navigate: NavigateFunctio
     }
 
     navigate('/');
-    toast.success('รีเซ็ตเรียบร้อย');
+    toast.success('Completed reset');
 
     if (!chatId) {
       const res = await client.get('/api/files').catch(() => null);
       if (res?.data?.total_files > 0) {
         setFiles(res?.data.files);
-        toast.info('ไฟล์เดิมบางส่วนยังอยู่ที่เซิร์ฟเวอร์');
+        toast.info('Some original files are still on the server.');
       }
     }
   } catch (e: any) {

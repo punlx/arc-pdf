@@ -34,7 +34,7 @@ export function useChatSubmit() {
     if (!q || sending) return;
 
     if (!filesCount) {
-      toast.warning('กรุณาอัปโหลด PDF ก่อนถามคำถาม');
+      toast.warning('Please upload a PDF before asking a question.');
       return;
     }
 
@@ -102,7 +102,7 @@ export function useChatSubmit() {
     } catch (err: any) {
       const msg =
         err?.message === 'Network Error'
-          ? 'Network error: กรุณาตรวจสอบการเชื่อมต่อ'
+          ? 'Network error: Please check the connection.'
           : err?.message ?? 'Chat failed';
 
       toast.error(msg);
