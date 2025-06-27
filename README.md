@@ -24,16 +24,16 @@ $ docker compose up --build
 
 > 1. Demo
 
-- Speedrun (Setup + Core Features) : https://youtu.be/pWvKy3xzRJA
-- Walkthrough + Explanation : https://youtu.be/aDrPLYvxCTM
+- Speedrun (Setup + Core Features) : (Link)[https://youtu.be/pWvKy3xzRJA]
+- Walkthrough + Explanation : (Link)[https://youtu.be/aDrPLYvxCTM]
 
 > 2. Codebase
 
-- VS Code code‑tour : https://youtu.be/h1VHL9NERQk
+- VS Code code‑tour : (Link)[https://youtu.be/h1VHL9NERQk]
 
 > 3. Production
 
-- CI/CD Pipeline : IN PROCESS
+- CI/CD Pipeline : (Link)[https://youtu.be/cGGknYL0iyU]
 
 ---
 
