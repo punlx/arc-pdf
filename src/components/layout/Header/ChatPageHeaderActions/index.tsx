@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { MemoryBadge } from '@/components/memory/MemoryBadge';
-import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { ThemeToggle } from '@/components/layout/Header/ThemeToggle';
 import { useIsMobile } from '@/hooks/useMobile';
 import { useChatStore } from '@/stores/chatStore';
 import { fullReset } from '@/lib/fullReset';

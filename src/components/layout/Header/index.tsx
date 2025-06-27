@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useSidebar } from '../../ui/sidebar';
-import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { ThemeToggle } from '@/components/layout/Header/ThemeToggle';
 import { ChatPageHeaderActions } from './ChatPageHeaderActions'; // 🚀 Import component ใหม่
 
 export const Header = () => {

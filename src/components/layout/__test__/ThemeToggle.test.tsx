@@ -2,7 +2,7 @@
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ThemeToggle } from '../ThemeToggle';
+import { ThemeToggle } from '../Header/ThemeToggle';
 import type { UserEvent } from '@testing-library/user-event'; // 🆕 Import UserEvent type
 
 // --- 1. Mock 'next-themes' library ---
