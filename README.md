@@ -11,9 +11,31 @@ The repository now ships with **Storybook**, **Chromatic visual tests**, and **
 # 1. clone + cd
 $ git clone https://github.com/punlx/arc-pdf.git
 
-# 2. start everything
+# 2. access folder
+$ cd arc-pdf
+
+# 3. start everything
 $ docker compose up --build
 ```
+
+---
+
+## Loom Walk‑through
+
+> 1. Demo
+
+- Speedrun (Setup + Core Features) : https://www.youtube.com/watch?v=pWvKy3xzRJA
+- Walkthrough + Explanation : https://www.youtube.com/watch?v=aDrPLYvxCTM
+
+> 2. Codebase
+
+- VS Code code‑tour : youtubelink
+
+> 3. Production
+
+- CI/CD Pipeline : youtubelink
+
+---
 
 | Works                              | Scripts                                            |
 | ---------------------------------- | -------------------------------------------------- |
@@ -106,15 +128,5 @@ src/
 | **Security**      | JWT auth, rate‑limit, virus‑scan PDF                                        | Hardening สำหรับ production           |
 | **Performance**   | Virtualize long chat (react‑window) <br> Reconnect & back‑pressure WS       | UX ลื่นไหล, รองรับโหลดสูง             |
 | **UX**            | Resumable uploads (Tus) <br> Keyboard shortcuts, i18n                       | Delight ผู้ใช้ & รองรับตลาดกว้าง      |
-
----
-
-## 4. Loom Walk‑through
-
-> Youtube Link (IN Process)
->
-> 1. Upload → Chat demo (REST & WS)
-> 2. VS Code code‑tour (components/hooks/stores)
-> 3. CI pipeline
 
 ---

@@ -2,7 +2,7 @@ import { Settings, MessageSquare, Glasses } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { ThemeSelect } from '@/components/theme/ThemeSelect';
+import { ThemeSelect } from '@/components/layout/Header/ChatPageHeaderActions/ThemeSelect';
 import { StreamModeToggle } from './StreamModeToggle'; // 🚀 ใช้ Component ที่สร้างใหม่
 
 export const MobileSettingsSheet = () => {

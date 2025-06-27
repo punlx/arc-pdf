@@ -34,7 +34,7 @@ export function useFilesSync(chatId: string | null) {
 
         const status: StatusParsed = statusResSchema.parse(statusRes.data);
 
-        setFiles(filesRes.files); // ← ใช้ผลที่ parse แล้ว
+        setFiles(filesRes.files);
         setMemory(status.has_memory);
       } catch {}
     })();
