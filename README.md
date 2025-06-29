@@ -7,12 +7,27 @@ The repository now ships with **Storybook**, **Chromatic visual tests**, and **
 
 ## ➤ Run locally with Docker‑Compose
 
+- Frontend
+
 ```bash
 # 1. clone + cd
 $ git clone https://github.com/punlx/arc-pdf.git
 
 # 2. access folder
 $ cd arc-pdf
+
+# 3. start everything
+$ docker compose up --build
+```
+
+- Backend
+
+```bash
+# 1. clone + cd
+$ git clone https://github.com/punlx/arc-pdf-backend.git
+
+# 2. access folder
+$ cd arc-pdf-backend
 
 # 3. start everything
 $ docker compose up --build
