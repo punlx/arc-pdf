@@ -26,6 +26,7 @@ export function useChatHistory(chatId: string | undefined) {
 
     const fetchHistory = async () => {
       try {
+        // TODO: ให้ทำเป็น constant API URL แทน
         const res = await client.get(`/api/chat/${chatId}`);
         const entries = res.data.messages as ChatEntry[];
 

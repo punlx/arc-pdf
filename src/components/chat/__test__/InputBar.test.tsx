@@ -7,11 +7,11 @@ import { MemoryRouter } from 'react-router-dom';
 import type { UserEvent } from '@testing-library/user-event'; // 🆕 Import UserEvent type
 
 // --- 1. Mock Dependencies ---
-import { useChatSubmit } from '@/hooks/useChatSubmit';
+import { useChatSubmit } from '@/hooks/chat/useChatSubmit';
 import { useFilesStore, type FilesState } from '@/stores/filesStore'; // 🆕 Import State type
 import { useChatStore, type ChatState } from '@/stores/chatStore'; // 🆕 Import State type
 
-vi.mock('@/hooks/useChatSubmit');
+vi.mock('@/hooks/chat/useChatSubmit');
 vi.mock('@/stores/filesStore');
 vi.mock('@/stores/chatStore');
 vi.mock('../upload/UploadPanel', () => ({
