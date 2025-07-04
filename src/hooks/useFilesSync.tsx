@@ -29,6 +29,8 @@ export function useFilesSync(chatId: string | null) {
       try {
         const [filesRes, statusRes] = await Promise.all([
           fetchFiles(chatId),
+          // TODO: อาจจะทำ api constant ให้ export มาใช้ได้
+          // TODO: แก้ไขใให้ใช้ client.get('/api/status/:chatId') แทน
           client.get('/api/status'),
         ]);
 
