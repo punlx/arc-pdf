@@ -102,7 +102,6 @@ const SessionList = ({ sessions }: { sessions: SessionMeta[] }) => {
   return (
     <SidebarMenu>
       {sessions.map((s) => (
-        // ⬇️ ไม่ต้องส่ง props ที่ไม่จำเป็นลงไปอีกแล้ว
         <SessionListItem key={s.chat_id} session={s} />
       ))}
     </SidebarMenu>
