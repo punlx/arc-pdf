@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useChatSubmit } from '../chat/useChatSubmit';
+import { useChatSubmit } from '../useChatSubmit';
 import { MemoryRouter } from 'react-router-dom';
 
 import { useChatStore, type ChatState } from '@/stores/chatStore';

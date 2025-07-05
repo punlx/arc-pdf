@@ -1,6 +1,5 @@
 import { Plus, Ellipsis, Trash, File } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { fullReset } from '@/lib/fullReset';
 import { Button } from '@/components/ui/button';
 import { useSessionsStore, type SessionMeta } from '@/stores/sessionsStore';
 import { useChatStore } from '@/stores/chatStore';
@@ -29,7 +28,9 @@ import {
 
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '../ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
+
+import { useSessionActions } from './useSessionActions';
 
 const NewChatButton = ({ onClick }: { onClick: () => void }) => (
   <Button
@@ -43,22 +44,20 @@ const NewChatButton = ({ onClick }: { onClick: () => void }) => (
   </Button>
 );
 
-const SessionListItem = ({
-  session,
-  onSelect,
-  onDelete,
-}: {
-  session: SessionMeta;
-  onSelect: () => void;
-  onDelete: () => void;
-}) => {
+const SessionListItem = ({ session }: { session: SessionMeta }) => {
+  const { handleSelectSession, handleDeleteSession } = useSessionActions();
+
   const labelText = session.first_question?.trim();
   const messageCount = session.message_count;
+
   return (
     <SidebarMenuItem data-testid={`session-item-${session.chat_id}`}>
       <SidebarMenuButton asChild className="flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-2 flex-1 min-w-0" onClick={onSelect}>
+          <div
+            className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer"
+            onClick={() => handleSelectSession(session.chat_id)}
+          >
             <span className="flex-1 min-w-0 truncate text-[16px]">{labelText}</span>
             <Badge variant="default">{messageCount}</Badge>
           </div>
@@ -74,7 +73,10 @@ const SessionListItem = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-0">
-              <DropdownMenuItem className="flex justify-between" onClick={onDelete}>
+              <DropdownMenuItem
+                className="flex justify-between"
+                onClick={() => handleDeleteSession(session.chat_id)}
+              >
                 <Trash />
                 <span>Delete</span>
               </DropdownMenuItem>
@@ -86,15 +88,7 @@ const SessionListItem = ({
   );
 };
 
-const SessionList = ({
-  sessions,
-  onSelectSession,
-  onDeleteSession,
-}: {
-  sessions: SessionMeta[];
-  onSelectSession: (chatId: string) => void;
-  onDeleteSession: (chatId: string) => void;
-}) => {
+const SessionList = ({ sessions }: { sessions: SessionMeta[] }) => {
   if (sessions.length === 0) {
     return (
       <p className="flex items-center gap-3 opacity-60">
@@ -107,12 +101,7 @@ const SessionList = ({
   return (
     <SidebarMenu>
       {sessions.map((s) => (
-        <SessionListItem
-          key={s.chat_id}
-          session={s}
-          onSelect={() => onSelectSession(s.chat_id)}
-          onDelete={() => onDeleteSession(s.chat_id)}
-        />
+        <SessionListItem key={s.chat_id} session={s} />
       ))}
     </SidebarMenu>
   );
@@ -129,7 +118,7 @@ const SidebarOpenTrigger = () => {
 };
 
 const SidebarLayout = ({ children }: { children: ReactNode }) => {
-  const { sessions, bringToFront } = useSessionsStore();
+  const { sessions } = useSessionsStore();
   const resetChat = useChatStore((s) => s.reset);
   const clearFiles = useFilesStore((s) => s.clear);
   const navigate = useNavigate();
@@ -138,33 +127,10 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
   const handleNewChat = () => {
     resetChat();
     clearFiles();
-    document.title = 'ArcPDF'; // 🆕 รีเซ็ตชื่อแท็บ
+    document.title = 'ArcPDF';
     navigate('/');
-    if (isMobile && typeof setOpenMobile === 'function') {
+    if (isMobile) {
       setOpenMobile(false);
-    }
-  };
-
-  const handleSelectSession = (chatId: string) => {
-    bringToFront(chatId);
-
-    const selectedSession = sessions.find((s) => s.chat_id === chatId);
-    if (selectedSession?.first_question) {
-      document.title = `ArcPDF - ${selectedSession.first_question}`;
-    } else {
-      document.title = 'ArcPDF'; // ชื่อสำรอง
-    }
-
-    navigate(`/${chatId}`);
-    if (isMobile && typeof setOpenMobile === 'function') {
-      setOpenMobile(false);
-    }
-  };
-
-  const handleDeleteSession = (chatId: string) => {
-    if (window.confirm('ลบแชตนี้ทั้งหมด ?')) {
-      fullReset(chatId, navigate);
-      document.title = 'ArcPDF'; // 🆕 รีเซ็ตชื่อแท็บ
     }
   };
 
@@ -184,11 +150,8 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
             <ScrollArea className="h-full w-full pr-4">
               <div className="opacity-60 mb-3">Chats</div>
               <Separator className="mb-4" />
-              <SessionList
-                sessions={sessions}
-                onSelectSession={handleSelectSession}
-                onDeleteSession={handleDeleteSession}
-              />
+              {/* ⬇️ ส่งแค่ข้อมูล sessions ที่จำเป็นลงไป ไม่ต้องส่งฟังก์ชัน */}
+              <SessionList sessions={sessions} />
             </ScrollArea>
           </SidebarContent>
         </div>

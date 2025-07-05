@@ -2,7 +2,7 @@ import UploadPDF from '@/assets/upload_pdf.png';
 import { Loader2 } from 'lucide-react';
 import { usePdfUploader } from '@/hooks/usePdfUploader';
 import { useDropzone } from 'react-dropzone';
-import { useTypingEffect } from '@/hooks/useTypingEffect'; // 🆕 Import hook
+import { useTypingEffect } from '@/routes/HomePage/useTypingEffect';
 
 const UPLOAD_TEXT = 'Let’s Upload your PDF...';
 

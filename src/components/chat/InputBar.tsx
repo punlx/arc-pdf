@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useChatStore } from '@/stores/chatStore';
 import { useFilesStore } from '@/stores/filesStore';
-import { useChatSubmit } from '@/hooks/chat/useChatSubmit';
+import { useChatSubmit } from '@/hooks/useChatSubmit';
 import { UploadPanel } from '../upload/UploadPanel';
 
 export const InputBar = () => {
@@ -52,10 +52,8 @@ export const InputBar = () => {
             disabled={isSubmitting || !text.trim() || !hasFiles}
           >
             {isSubmitting ? (
-              // 🆕 เพิ่ม data-testid
               <Loader2 className="animate-spin h-4 w-4" data-testid="loader-icon" />
             ) : (
-              // 🆕 เพิ่ม data-testid
               <SendHorizonal className="h-4 w-4" data-testid="send-icon" />
             )}
           </Button>
