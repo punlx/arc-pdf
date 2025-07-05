@@ -12,6 +12,7 @@ export const ChatPageHeaderActions = () => {
   const navigate = useNavigate();
   const isMobileScreen = useIsMobile();
   const chatId = useChatStore((s) => s.chatId);
+  const hasMemory = useChatStore((s) => s.hasMemory);
 
   async function handleReset() {
     if (!window.confirm('ล้างแชตและไฟล์ทั้งหมด ?')) return;
@@ -21,7 +22,7 @@ export const ChatPageHeaderActions = () => {
   return (
     <>
       <MemoryBadge />
-      <Button variant="outline" onClick={handleReset}>
+      <Button disabled={!hasMemory} variant="outline" onClick={handleReset}>
         Reset
       </Button>
 
