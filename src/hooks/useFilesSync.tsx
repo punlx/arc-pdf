@@ -29,7 +29,7 @@ export function useFilesSync(chatId: string | null) {
       try {
         const [filesRes, statusRes] = await Promise.all([
           fetchFiles(chatId),
-          client.get(`/api/status/${chatId}`),
+          client.get(`/api/status?chat_id=${chatId}`),
         ]);
 
         const status: StatusParsed = statusResSchema.parse(statusRes.data);
