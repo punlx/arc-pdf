@@ -73,7 +73,6 @@ const SessionListItem = ({ session }: { session: SessionMeta }) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-0">
-              {/* 🆕 เรียกใช้ handleDeleteSession จาก hook โดยตรง */}
               <DropdownMenuItem
                 className="flex justify-between"
                 onClick={() => handleDeleteSession(session.chat_id)}
