@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import type { NavigateFunction } from 'react-router-dom';
 
 export async function fullReset(chatId: string | null, navigate: NavigateFunction) {
-  const { reset: resetChat, setMemory } = useChatStore.getState();
+  const { reset: resetChat } = useChatStore.getState();
   const { clear: clearFiles, setFiles } = useFilesStore.getState();
   const { removeSession, clear: clearSessions } = useSessionsStore.getState();
 
@@ -15,8 +15,6 @@ export async function fullReset(chatId: string | null, navigate: NavigateFunctio
     await resetSession(chatId ? { chat_id: chatId } : {});
 
     resetChat();
-    setMemory(false);
-
     if (chatId) {
       clearFiles();
       removeSession(chatId);

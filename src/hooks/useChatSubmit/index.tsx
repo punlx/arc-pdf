@@ -26,7 +26,7 @@ export function useChatSubmit() {
       const res = await client.get('/api/chat');
       setSessions(res.data.chats);
     } catch {
-      // เงียบไว้
+      toast.error('Failed to refresh sessions');
     }
   };
 

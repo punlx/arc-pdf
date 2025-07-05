@@ -1,4 +1,3 @@
-
 import { ChatWindow } from '@/components/chat/ChatWindow';
 import { InputBar } from '@/components/chat/InputBar';
 import { useParams } from 'react-router-dom';

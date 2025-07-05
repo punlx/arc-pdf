@@ -17,7 +17,7 @@ export interface ChatState {
 
   addMessage: (m: Message) => void;
   updateMessage: (id: string, patch: Patch) => void;
-  setMessages: (ms: Message[]) => void; // 🆕
+  setMessages: (ms: Message[]) => void;
   setChatId: (id: string | null) => void;
   setMemory: (f: boolean) => void;
   setSending: (v: boolean) => void;
@@ -41,7 +41,7 @@ export const useChatStore = create<ChatState>((set) => ({
       }),
     })),
 
-  setMessages: (ms) => set({ messages: ms }), // 🆕
+  setMessages: (ms) => set({ messages: ms }),
 
   setChatId: (id) => set({ chatId: id }),
   setMemory: (f) => set({ hasMemory: f }),
