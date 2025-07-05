@@ -53,7 +53,7 @@ export function usePdfUploader() {
       if (!targetId) {
         try {
           const res = await client.post('/api/chat/create');
-          const parsed: CreateChatParsed = createChatResSchema.parse(res.data); // ✅ validate
+          const parsed: CreateChatParsed = createChatResSchema.parse(res.data);
           targetId = parsed.chat_id;
           setChatId(targetId);
           navigate(`/${targetId}`);

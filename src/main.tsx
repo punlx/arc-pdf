@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import App from './App';
-import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 import './index.css';
 
 const isDev = import.meta.env.DEV;

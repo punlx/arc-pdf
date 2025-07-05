@@ -18,7 +18,6 @@ export const DropZone = () => {
   return (
     <div
       {...getRootProps()}
-      // 🆕 เพิ่ม data-testid สำหรับ container หลัก
       data-testid="dropzone-container"
       className={cn(
         'flex items-center justify-center cursor-pointer',
@@ -29,10 +28,8 @@ export const DropZone = () => {
       <input {...getInputProps()} />
 
       {loading ? (
-        // 🆕 เพิ่ม data-testid สำหรับ icon โหลด
         <Loader2 className="w-4 h-4 animate-spin" data-testid="loader-icon" />
       ) : (
-        // 🆕 เพิ่ม data-testid สำหรับ icon อัปโหลด
         <FileUp data-testid="file-up-icon" />
       )}
     </div>

@@ -52,10 +52,8 @@ export const InputBar = () => {
             disabled={isSubmitting || !text.trim() || !hasFiles}
           >
             {isSubmitting ? (
-              // 🆕 เพิ่ม data-testid
               <Loader2 className="animate-spin h-4 w-4" data-testid="loader-icon" />
             ) : (
-              // 🆕 เพิ่ม data-testid
               <SendHorizonal className="h-4 w-4" data-testid="send-icon" />
             )}
           </Button>

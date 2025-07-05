@@ -29,12 +29,12 @@ export function useFilesSync(chatId: string | null) {
       try {
         const [filesRes, statusRes] = await Promise.all([
           fetchFiles(chatId),
-          client.get('/api/status'),
+          client.get(`/api/status/${chatId}`),
         ]);
 
         const status: StatusParsed = statusResSchema.parse(statusRes.data);
 
-        setFiles(filesRes.files); // ← ใช้ผลที่ parse แล้ว
+        setFiles(filesRes.files);
         setMemory(status.has_memory);
       } catch {}
     })();

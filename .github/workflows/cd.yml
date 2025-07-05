@@ -47,11 +47,6 @@ jobs:
       - name: Build production bundle
         run: yarn build
 
-      # ให้ Chromatic build ให้แทน
-      # # 9️⃣ Build static Storybook
-      # - name: Build static Storybook
-      #   run: yarn build-storybook --quiet
-
       # 🔟 Ensure Dockerfile.prod builds
       - name: Docker build (no push)
         uses: docker/build-push-action@v5

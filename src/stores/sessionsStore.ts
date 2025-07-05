@@ -6,6 +6,7 @@ export interface SessionMeta {
   message_count: number;
   first_question?: string;
   last_message_time?: string;
+  has_memory?: boolean;
 }
 
 export interface SessionsState {

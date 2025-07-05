@@ -7,38 +7,75 @@ The repository now ships with **Storybook**, **Chromatic visual tests**, and **
 
 ## ➤ Run locally with Docker‑Compose
 
+- Frontend
+
 ```bash
 # 1. clone + cd
 $ git clone https://github.com/punlx/arc-pdf.git
 
-# 2. start everything
+# 2. access folder
+$ cd arc-pdf
+
+# 3. start everything
 $ docker compose up --build
 ```
 
-| Works                              | Scripts                                            |
-| ---------------------------------- | -------------------------------------------------- |
-| **Dev server (Vite + HMR)**        | `yarn dev`                                         |
-| **Build โปรดักชัน**                | `yarn build`                                       |
-| **Preview ไฟล์ build**             | `yarn preview`                                     |
-| **Storybook (โหมด dev)**           | `yarn storybook`                                   |
-| **Build Storybook static**         | `yarn build-storybook`                             |
-| **Unit tests (Vitest)**            | `yarn test`                                        |
-| **Watch tests**                    | `yarn test:watch`                                  |
-| **Report coverage**                | `yarn coverage`                                    |
-| **Storybook tests (Vitest-addon)** | `yarn test:storybook`                              |
-| **UI test runner (Vitest UI)**     | `yarn test:ui`                                     |
-| **E2E – ชุดเต็ม (Playwright)**     | `yarn e2e`                                         |
-| **E2E – smoke subset**             | `yarn e2e:smoke`                                   |
-| **E2E – debug/headed mode**        | `yarn e2e:debug`                                   |
-| **แสดงรายงาน E2E ล่าสุด**          | `yarn e2e:report`                                  |
-| **Chromatic visual tests**         | `npx chromatic` (ต้องมี `CHROMATIC_PROJECT_TOKEN`) |
+- Backend
+
+```bash
+# 1. clone + cd
+$ git clone https://github.com/punlx/arc-pdf-backend.git
+
+# 2. access folder
+$ cd arc-pdf-backend
+
+# 3. start everything
+$ docker compose up --build
+```
+
+---
+
+## Loom Walk‑through
+
+> 1. Demo
+
+- Speedrun (Setup + Core Features) : (Link)[https://youtu.be/pWvKy3xzRJA]
+- Walkthrough + Explanation : (Link)[https://youtu.be/aDrPLYvxCTM]
+
+> 2. Codebase
+
+- VS Code code‑tour : (Link)[https://youtu.be/h1VHL9NERQk]
+
+> 3. Production
+
+- CI/CD Pipeline : (Link)[https://youtu.be/cGGknYL0iyU]
+
+---
+
+| Works                              | Scripts                |
+| ---------------------------------- | ---------------------- |
+| **Dev server (Vite + HMR)**        | `yarn dev`             |
+| **Build โปรดักชัน**                | `yarn build`           |
+| **Preview ไฟล์ build**             | `yarn preview`         |
+| **Storybook (โหมด dev)**           | `yarn storybook`       |
+| **Build Storybook static**         | `yarn build-storybook` |
+| **Unit tests (Vitest)**            | `yarn test`            |
+| **Watch tests**                    | `yarn test:watch`      |
+| **Report coverage**                | `yarn coverage`        |
+| **Storybook tests (Vitest-addon)** | `yarn test:storybook`  |
+| **UI test runner (Vitest UI)**     | `yarn test:ui`         |
+| **E2E – ชุดเต็ม (Playwright)**     | `yarn e2e`             |
+| **E2E – smoke subset**             | `yarn e2e:smoke`       |
+| **E2E – Full subset**              | `yarn e2e:full`        |
+| **E2E – debug/headed mode**        | `yarn e2e:debug`       |
+| **แสดงรายงาน E2E ล่าสุด**          | `yarn e2e:report`      |
 
 ## 1. Project Structure & Component Breakdown
 
 ```txt
 src/
 ├── api/                # Axios clients + type‑safe service functions
-│   ├── chat.ts         # Q&A (REST) + Zod schemas
+│   ├── chat.ts         # Q&A (REST)
 │   ├── wsChat.ts       # Q&A (WebSocket streaming)
 │   ├── upload.ts       # PDF upload
 │   ├── files.ts        # List / delete files
@@ -106,15 +143,5 @@ src/
 | **Security**      | JWT auth, rate‑limit, virus‑scan PDF                                        | Hardening สำหรับ production           |
 | **Performance**   | Virtualize long chat (react‑window) <br> Reconnect & back‑pressure WS       | UX ลื่นไหล, รองรับโหลดสูง             |
 | **UX**            | Resumable uploads (Tus) <br> Keyboard shortcuts, i18n                       | Delight ผู้ใช้ & รองรับตลาดกว้าง      |
-
----
-
-## 4. Loom Walk‑through
-
-> Youtube Link (IN Process)
->
-> 1. Upload → Chat demo (REST & WS)
-> 2. VS Code code‑tour (components/hooks/stores)
-> 3. CI pipeline
 
 ---
