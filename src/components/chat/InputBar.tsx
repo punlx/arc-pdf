@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useChatStore } from '@/stores/chatStore';
 import { useFilesStore } from '@/stores/filesStore';
-import { useChatSubmit } from '@/hooks/chat/useChatSubmit';
+import { useChatSubmit } from '@/hooks/useChatSubmit';
 import { UploadPanel } from '../upload/UploadPanel';
 
 export const InputBar = () => {
